@@ -1,0 +1,21 @@
+{
+  "name": "dashy",
+  "private": true,
+  "scripts": {
+    "build": "dotenv -- build",
+    "dev": "dotenv -- turbo dev",
+    "lint": "dotenv -- lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "dotenv-cli": "^7.4.1",
+    "prettier": "^3.2.5",
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@8.9.0",
+  "engines": {
+    "node": ">=18"
+  }
+}

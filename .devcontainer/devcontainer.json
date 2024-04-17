@@ -1,0 +1,12 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "customizations": {
+    "codespaces": {
+      "repositories": {
+        "Michelo11/Dashy-refactor": {
+          "permissions": "write-all"
+        }
+      }
+    }
+  }
+}

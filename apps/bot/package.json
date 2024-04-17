@@ -19,7 +19,8 @@
     "discord-oauth2": "^2.12.1",
     "discord.js": "^14.14.1",
     "discordx": "^11.9.0",
-    "hono": "^4.2.4"
+    "hono": "^4.2.4",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",

@@ -2,9 +2,13 @@
   "name": "database",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:generate": "prisma generate",
+    "db:push": "dotenv -e ../../.env -- prisma db push --skip-generate",
+    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev"
   },
   "keywords": [],
   "author": "",

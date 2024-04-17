@@ -13,3 +13,67 @@ model User {
   username String @unique
   avatar   String
 }
+
+model Guild {
+  id   String  @id
+  role String?
+
+  eventLogConfig EventLogConfig[]
+  logRecord      LogRecord[]
+  level          Level[]
+}
+
+model EventLogConfig {
+  id        Int       @id @default(autoincrement())
+  guildId   String
+  channelId String
+  event     EventType
+
+  embedId Int
+  embed   Embed @relation(fields: [embedId], references: [id])
+  guild   Guild @relation(fields: [guildId], references: [id])
+}
+
+enum EventType {
+  CHANNEL_CREATE
+  CHANNEL_DELETE
+  GUILD_BAN_ADD
+  GUILD_BAN_REMOVE
+  GUILD_MEMBER_ADD
+  GUILD_MEMBER_UPDATE
+  GUILD_BOOST
+  INVITE_CREATE
+  INVITE_DELETE
+  MESSAGE_DELETE
+}
+
+model Embed {
+  id          Int     @id @default(autoincrement())
+  title       String?
+  description String?
+  color       String  @default("#1D4ED8")
+
+  eventLogConfig EventLogConfig[]
+}
+
+model LogRecord {
+  id        Int      @id @default(autoincrement())
+  guildId   String
+  message   String
+  author    String
+  createdAt DateTime @default(now())
+
+  guild Guild @relation(fields: [guildId], references: [id])
+}
+
+model Level {
+  id        Int      @id @default(autoincrement())
+  level     Int
+  xp        Int
+  name      String
+  role      String?
+  guildId   String
+  createdAt DateTime @default(now())
+
+  guild Guild @relation(fields: [guildId], references: [id])
+}

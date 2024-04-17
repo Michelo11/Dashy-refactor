@@ -13,7 +13,6 @@ auth.get("/login", async (ctx) => {
 auth.get("/callback", async (ctx) => {
   const query = ctx.req.query();
   const oauth = new DiscordOauth2();
-
   const token = await oauth.tokenRequest({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,

@@ -1,5 +1,6 @@
 import { dirname, importx } from "@discordx/importer";
 import { serve } from "@hono/node-server";
+import { prisma } from "database";
 import type { Interaction, Message } from "discord.js";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
@@ -56,6 +57,67 @@ async function run() {
   const port = process.env.PORT || 8000;
 
   serve(hono).listen(port);
+
+  setInterval(
+    async () => {
+      await checkGiveaways();
+    },
+    1000 * 60 * 5
+  );
+
+  checkGiveaways();
+}
+
+async function checkGiveaways() {
+  const giveaways = await prisma.giveaway.findMany({
+    where: {
+      endsAt: {
+        lte: new Date(),
+      },
+    },
+    include: {
+      participants: true,
+    },
+  });
+
+  for (const giveaway of giveaways) {
+    const guild = await bot.guilds.fetch(giveaway.guildId);
+
+    if (!guild) {
+      continue;
+    }
+    const channel = guild.channels.cache.get(giveaway.channelId);
+
+    if (!channel || !channel.isTextBased()) {
+      continue;
+    }
+
+    const message = await channel.messages.fetch(giveaway.messageId!);
+
+    if (!message) {
+      continue;
+    }
+
+    const winners = giveaway.participants
+      .sort(() => Math.random() - 0.5)
+      .slice(0, giveaway.winnerCount);
+    const winnersString =
+      winners.length > 0
+        ? winners.map((user) => `<@${user.userId}>`).join(", ")
+        : "No one";
+
+    await message.channel.send({
+      content: `Congratulations to ${winnersString} for winning the giveaway: ${giveaway.title}!`,
+    });
+
+    await message.delete();
+
+    await prisma.giveaway.delete({
+      where: {
+        id: giveaway.id,
+      },
+    });
+  }
 }
 
 void run();

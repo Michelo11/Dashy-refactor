@@ -15,7 +15,7 @@ export function createEmbed(
 
   return new EmbedBuilder()
     .setTitle(title)
-    .setDescription(description)
+    .setDescription(description ? description.replaceAll("\\n", "\n") : null)
     .setColor(embedData.color as ColorResolvable)
     .setTimestamp()
     .setFooter({

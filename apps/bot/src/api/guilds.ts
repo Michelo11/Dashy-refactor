@@ -14,6 +14,7 @@ const guilds = new Hono<{ Variables: Variables }>().basePath(
 
 guilds.use("/rename", authorized);
 guilds.use("/role", authorized);
+guilds.use("/roles", authorized);
 
 guilds.post("/rename", async (ctx) => {
   const id = ctx.req.param("id");

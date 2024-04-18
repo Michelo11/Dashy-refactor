@@ -1,0 +1,119 @@
+import { prisma } from "database";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonInteraction,
+  ButtonStyle,
+  CommandInteraction,
+  PermissionFlagsBits,
+  TextChannel,
+} from "discord.js";
+import { ButtonComponent, Discord, Slash } from "discordx";
+import { createEmbed } from "../utils/embeds";
+
+@Discord()
+class Ticket {
+  @ButtonComponent({ id: "ticket_create" })
+  async handler(interaction: ButtonInteraction): Promise<void> {
+    const guild = await prisma.guild.findFirst({
+      where: { id: interaction.guildId! },
+      select: {
+        ticketCategory: true,
+        ticketEmbed: true,
+      },
+    });
+
+    if (!guild || !guild.ticketCategory || !guild.ticketEmbed) {
+      interaction.reply({
+        content: "Ticket system is not set up",
+        ephemeral: true,
+      });
+
+      return;
+    }
+
+    const channel = await interaction.guild?.channels.create({
+      name: "ticket-" + interaction.user.username,
+      parent: guild.ticketCategory,
+      permissionOverwrites: [
+        {
+          id: interaction.guildId!,
+          deny: [PermissionFlagsBits.ViewChannel],
+        },
+        {
+          id: interaction.user.id,
+          allow: [PermissionFlagsBits.ViewChannel],
+        },
+      ],
+    });
+
+    if (!channel) {
+      interaction.reply({
+        content: "Failed to create a ticket channel",
+        ephemeral: true,
+      });
+
+      return;
+    }
+
+    await channel.send({
+      embeds: [
+        createEmbed(guild.ticketEmbed, {
+          user: interaction.user.toString(),
+          channel: channel.toString(),
+        }),
+      ],
+    });
+
+    await prisma.ticket.create({
+      data: {
+        owner: interaction.user.id,
+        id: channel.id,
+        guildId: interaction.guildId!,
+      },
+    });
+
+    interaction.reply({
+      content: "Ticket created",
+      ephemeral: true,
+    });
+  }
+
+  @Slash({ description: "Send ticket panel message", name: "panel" })
+  async panel(interaction: CommandInteraction): Promise<void> {
+    const guild = await prisma.guild.findFirst({
+      where: { id: interaction.guildId! },
+      select: {
+        ticketPanelEmbed: true,
+      },
+    });
+
+    if (!guild || !guild.ticketPanelEmbed) {
+      interaction.reply({
+        content: "Ticket system is not set up",
+        ephemeral: true,
+      });
+
+      return;
+    }
+
+    const channel = interaction.channel as TextChannel;
+
+    await channel.send({
+      embeds: [createEmbed(guild.ticketPanelEmbed, {})],
+      components: [
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId("ticket_create")
+            .setLabel("Create a ticket")
+            .setStyle(ButtonStyle.Primary)
+        ),
+      ],
+    });
+
+    interaction.reply({
+      content: "Ticket panel sent",
+      ephemeral: true,
+    });
+  }
+}

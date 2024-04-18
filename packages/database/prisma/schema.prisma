@@ -18,9 +18,41 @@ model Guild {
   id   String  @id
   role String?
 
+  suggestionEmbedId Int?
+  suggestionChannel String?
+
+  ticketPanelEmbedId Int?
+  ticketCategory     String?
+  ticketEmbedId      Int?
+
+  giveawayEmbedId Int?
+
+  levelEmbedId Int?
+
   eventLogConfig EventLogConfig[]
   logRecord      LogRecord[]
   level          Level[]
+  ticket         Ticket[]
+  suggestion     Suggestion[]
+
+  suggestionEmbed  Embed? @relation(fields: [suggestionEmbedId], references: [id], name: "suggestionEmbed", onDelete: Cascade)
+  ticketPanelEmbed Embed? @relation(fields: [ticketPanelEmbedId], references: [id], name: "ticketPanelEmbed", onDelete: Cascade)
+  ticketEmbed      Embed? @relation(fields: [ticketEmbedId], references: [id], name: "ticketEmbed", onDelete: Cascade)
+  giveawayEmbed    Embed? @relation(fields: [giveawayEmbedId], references: [id], name: "giveawayEmbed", onDelete: Cascade)
+  levelEmbed       Embed? @relation(fields: [levelEmbedId], references: [id], onDelete: Cascade)
+
+  giveaways Giveaway[]
+}
+
+model GuildMember {
+  userId  String
+  guildId String
+  xp      Int    @default(0)
+
+  levelId Int?
+  level   Level? @relation(fields: [levelId], references: [id], onDelete: SetNull)
+
+  @@id([userId, guildId])
 }
 
 model EventLogConfig {
@@ -30,8 +62,8 @@ model EventLogConfig {
   event     EventType
 
   embedId Int
-  embed   Embed @relation(fields: [embedId], references: [id])
-  guild   Guild @relation(fields: [guildId], references: [id])
+  embed   Embed @relation(fields: [embedId], references: [id], onDelete: Cascade)
+  guild   Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
 }
 
 enum EventType {
@@ -53,7 +85,12 @@ model Embed {
   description String?
   color       String  @default("#1D4ED8")
 
-  eventLogConfig EventLogConfig[]
+  eventLogConfig   EventLogConfig[]
+  suggestionGuild  Guild[]          @relation(name: "suggestionEmbed")
+  ticketPanelGuild Guild[]          @relation(name: "ticketPanelEmbed")
+  ticketGuild      Guild[]          @relation(name: "ticketEmbed")
+  giveawayGuild    Guild[]          @relation(name: "giveawayEmbed")
+  Guild            Guild[]
 }
 
 model LogRecord {
@@ -63,7 +100,7 @@ model LogRecord {
   author    String
   createdAt DateTime @default(now())
 
-  guild Guild @relation(fields: [guildId], references: [id])
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
 }
 
 model Level {
@@ -75,5 +112,56 @@ model Level {
   guildId   String
   createdAt DateTime @default(now())
 
-  guild Guild @relation(fields: [guildId], references: [id])
+  guild       Guild         @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  guildMember GuildMember[]
+}
+
+model Ticket {
+  id        String   @id
+  createdAt DateTime @default(now())
+  owner     String
+  guildId   String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+model Suggestion {
+  id          Int      @id @default(autoincrement())
+  messageId   String?
+  description String
+  author      String
+  status      Status   @default(PENDING)
+  createdAt   DateTime @default(now())
+  guildId     String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+enum Status {
+  APPROVED
+  DENIED
+  PENDING
+}
+
+model Giveaway {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  winnerCount Int
+  channelId   String
+  messageId   String?  @unique
+  createdAt   DateTime @default(now())
+  endsAt      DateTime
+  guildId     String
+
+  guild        Guild                 @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  participants GiveawayParticipant[]
+}
+
+model GiveawayParticipant {
+  id         Int    @id @default(autoincrement())
+  giveawayId Int
+  userId     String
+
+  giveaway Giveaway @relation(fields: [giveawayId], references: [id], onDelete: Cascade)
 }

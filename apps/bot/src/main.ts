@@ -1,12 +1,17 @@
 import { dirname, importx } from "@discordx/importer";
-import { serve } from "@hono/node-server";
 import { prisma } from "database";
 import type { Interaction, Message } from "discord.js";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
 import { Hono } from "hono";
+import { createBunWebSocket } from "hono/bun";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
+
+const { upgradeWebSocket: upgradeWebSocketFn, websocket } =
+  createBunWebSocket();
+
+export const upgradeWebSocket = upgradeWebSocketFn;
 
 export const hono = new Hono();
 hono.use(logger());
@@ -53,10 +58,6 @@ async function run() {
   }
 
   await bot.login(process.env.BOT_TOKEN);
-
-  const port = process.env.PORT || 8000;
-
-  serve(hono).listen(port);
 
   setInterval(
     async () => {
@@ -121,3 +122,9 @@ async function checkGiveaways() {
 }
 
 void run();
+
+export default {
+  port: process.env.PORT || 8000,
+  fetch: hono.fetch,
+  websocket,
+};

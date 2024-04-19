@@ -1,9 +1,95 @@
-import { Hono } from "hono";
-import authorized from "../middlewares/authorized";
 import { prisma } from "database";
-import { bot, hono } from "../main.js";
+import { MessageCollector, TextBasedChannel } from "discord.js";
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { bot, hono, upgradeWebSocket } from "../main.js";
+import authorized from "../middlewares/authorized";
 
 const guilds = new Hono().basePath("/guilds/:id/tickets");
+
+guilds.get(
+  "/:ticket/ws",
+  cors({
+    origin: "*",
+    allowHeaders: ["Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
+  }),
+  authorized,
+  upgradeWebSocket((ctx) => {
+    let textChannel: TextBasedChannel | undefined;
+    let collector: MessageCollector | undefined;
+
+    return {
+      onOpen(_, ws) {
+        const id = ctx.req.param("id");
+        const ticketId = ctx.req.param("ticket");
+
+        const ticket = prisma.ticket.findUnique({
+          where: {
+            id: ticketId,
+            guildId: id,
+          },
+        });
+
+        if (!ticket) {
+          ws.close(404, "Ticket not found");
+          return;
+        }
+
+        const channel = bot.guilds.cache.get(id)?.channels.cache.get(ticketId);
+
+        if (!channel || !channel.isTextBased()) {
+          ws.close(404, "Channel not found");
+          return;
+        }
+
+        textChannel = channel;
+
+        collector = channel.createMessageCollector();
+
+        collector.on("collect", (message) => {
+          ws.send(
+            JSON.stringify({
+              id: message.id,
+              content: message.content,
+              author: {
+                id: message.author.id,
+                username: message.author.username,
+                avatar: message.author.avatarURL(),
+              },
+            })
+          );
+        });
+
+        collector.on("end", () => {
+          ws.close();
+        });
+      },
+
+      async onMessage(event) {
+        if (event.data.toString() === "/close") {
+          await textChannel?.delete();
+
+          if (textChannel)
+            await prisma.ticket.delete({
+              where: { id: textChannel.id },
+            });
+
+          return;
+        }
+
+        textChannel?.send(event.data.toString());
+      },
+
+      onClose() {
+        collector?.stop();
+      },
+    };
+  })
+);
 
 guilds.get("/", authorized, async (ctx) => {
   const id = ctx.req.param("id");

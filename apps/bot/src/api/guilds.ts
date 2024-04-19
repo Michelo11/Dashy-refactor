@@ -12,11 +12,7 @@ const guilds = new Hono<{ Variables: Variables }>().basePath(
   "/guilds/:id"
 );
 
-guilds.use("/rename", authorized);
-guilds.use("/role", authorized);
-guilds.use("/roles", authorized);
-
-guilds.post("/rename", async (ctx) => {
+guilds.post("/rename", authorized, async (ctx) => {
   const id = ctx.req.param("id");
   const body = await ctx.req.json();
 
@@ -44,7 +40,7 @@ guilds.post("/rename", async (ctx) => {
   });
 });
 
-guilds.post("/role", async (ctx) => {
+guilds.post("/role", authorized, async (ctx) => {
   const id = ctx.req.param("id");
   const body = await ctx.req.json();
 
@@ -83,7 +79,7 @@ guilds.post("/role", async (ctx) => {
   });
 });
 
-guilds.get("/roles", async (ctx) => {
+guilds.get("/roles", authorized, async (ctx) => {
   const id = ctx.req.param("id");
 
   const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));

@@ -58,8 +58,7 @@ class Suggestion {
       !suggestion.guild.suggestionEmbed
     ) {
       interaction.reply({
-        content:
-          "Suggestion are not set up",
+        content: "Suggestion are not set up",
         ephemeral: true,
       });
 

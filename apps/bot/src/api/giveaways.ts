@@ -9,11 +9,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 
 const guilds = new Hono().basePath("/guilds/:id/giveaways");
 
-guilds.use("/", authorized);
-guilds.use("/new", authorized);
-guilds.use("/:giveaway", authorized);
-
-guilds.get("/", async (ctx) => {
+guilds.get("/", authorized, async (ctx) => {
   const id = ctx.req.param("id");
 
   const guildData = await prisma.guild.findUnique({
@@ -50,6 +46,7 @@ const schema = z.object({
 
 guilds.post(
   "/new",
+  authorized,
   validator("json", (value, ctx) => {
     const parsed = schema.safeParse(value);
 
@@ -139,7 +136,7 @@ guilds.post(
   }
 );
 
-guilds.get("/:giveaway", async (ctx) => {
+guilds.get("/:giveaway", authorized, async (ctx) => {
   const id = ctx.req.param("id");
   const giveawayId = ctx.req.param("giveaway");
 
@@ -174,7 +171,7 @@ guilds.get("/:giveaway", async (ctx) => {
   });
 });
 
-guilds.delete("/:giveaway", async (ctx) => {
+guilds.delete("/:giveaway", authorized, async (ctx) => {
   const id = ctx.req.param("id");
   const giveawayId = ctx.req.param("giveaway");
 

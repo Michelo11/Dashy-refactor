@@ -7,10 +7,7 @@ import { z } from "zod";
 
 const guilds = new Hono().basePath("/guilds/:id/levels");
 
-guilds.use("/", authorized);
-guilds.use("/new", authorized);
-
-guilds.get("/", async (ctx) => {
+guilds.get("/", authorized, async (ctx) => {
   const id = ctx.req.param("id");
 
   const guild = await prisma.guild.findFirst({
@@ -46,6 +43,7 @@ const schema = z.object({
 
 guilds.post(
   "/new",
+  authorized,
   validator("json", (value, ctx) => {
     const parsed = schema.safeParse(value);
 
@@ -78,5 +76,21 @@ guilds.post(
     });
   }
 );
+
+guilds.delete("/:level", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+  const level = ctx.req.param("level");
+
+  await prisma.level.delete({
+    where: {
+      guildId: id,
+      id: parseInt(level),
+    },
+  });
+
+  return ctx.json({
+    success: true,
+  });
+});
 
 hono.route("/", guilds);

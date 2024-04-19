@@ -5,10 +5,7 @@ import { bot, hono } from "../main.js";
 
 const guilds = new Hono().basePath("/guilds/:id/tickets");
 
-guilds.use("/", authorized);
-guilds.use("/:ticket", authorized);
-
-guilds.get("/", async (ctx) => {
+guilds.get("/", authorized, async (ctx) => {
   const id = ctx.req.param("id");
 
   const guild = await prisma.guild.findFirst({
@@ -35,7 +32,7 @@ guilds.get("/", async (ctx) => {
   });
 });
 
-guilds.get("/:ticket", async (ctx) => {
+guilds.get("/:ticket", authorized, async (ctx) => {
   const id = ctx.req.param("id");
   const ticketId = ctx.req.param("ticket");
   const { limit } = ctx.req.query();
@@ -91,7 +88,7 @@ guilds.get("/:ticket", async (ctx) => {
   });
 });
 
-guilds.delete("/:ticket", async (ctx) => {
+guilds.delete("/:ticket", authorized, async (ctx) => {
   const id = ctx.req.param("id");
   const ticketId = ctx.req.param("ticket");
 

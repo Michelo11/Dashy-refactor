@@ -39,7 +39,7 @@ model Guild {
   ticketPanelEmbed Embed? @relation(fields: [ticketPanelEmbedId], references: [id], name: "ticketPanelEmbed", onDelete: Cascade)
   ticketEmbed      Embed? @relation(fields: [ticketEmbedId], references: [id], name: "ticketEmbed", onDelete: Cascade)
   giveawayEmbed    Embed? @relation(fields: [giveawayEmbedId], references: [id], name: "giveawayEmbed", onDelete: Cascade)
-  levelEmbed       Embed? @relation(fields: [levelEmbedId], references: [id], onDelete: Cascade)
+  levelEmbed       Embed? @relation(fields: [levelEmbedId], references: [id], name: "levelEmbed", onDelete: Cascade)
 
   giveaways Giveaway[]
 }
@@ -60,10 +60,10 @@ model EventLogConfig {
   guildId   String
   channelId String
   event     EventType
+  embedId   Int
 
-  embedId Int
-  embed   Embed @relation(fields: [embedId], references: [id], onDelete: Cascade)
-  guild   Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  embed Embed @relation(fields: [embedId], references: [id], onDelete: Cascade)
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
 }
 
 enum EventType {
@@ -85,12 +85,13 @@ model Embed {
   description String?
   color       String  @default("#1D4ED8")
 
-  eventLogConfig   EventLogConfig[]
-  suggestionGuild  Guild[]          @relation(name: "suggestionEmbed")
-  ticketPanelGuild Guild[]          @relation(name: "ticketPanelEmbed")
-  ticketGuild      Guild[]          @relation(name: "ticketEmbed")
-  giveawayGuild    Guild[]          @relation(name: "giveawayEmbed")
-  Guild            Guild[]
+  eventLogConfig EventLogConfig[]
+
+  suggestionGuild  Guild[] @relation(name: "suggestionEmbed")
+  ticketPanelGuild Guild[] @relation(name: "ticketPanelEmbed")
+  ticketGuild      Guild[] @relation(name: "ticketEmbed")
+  giveawayGuild    Guild[] @relation(name: "giveawayEmbed")
+  levelGuild       Guild[] @relation(name: "levelEmbed")
 }
 
 model LogRecord {
@@ -112,8 +113,8 @@ model Level {
   guildId   String
   createdAt DateTime @default(now())
 
-  guild       Guild         @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  guildMember GuildMember[]
+  guild   Guild         @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  members GuildMember[]
 }
 
 model Ticket {

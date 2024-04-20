@@ -46,6 +46,7 @@ model Guild {
 
   giveaways Giveaway[]
   warns     Warn[]
+  webhooks  Webhook[]
 }
 
 model GuildMember {
@@ -183,4 +184,17 @@ model Warn {
   createdAt DateTime @default(now())
 
   guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+model Webhook {
+  token   String        @id @default(cuid())
+  action  WebhookAction
+  payload String
+  guildId String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+enum WebhookAction {
+  ASSIGN_ROLE
 }

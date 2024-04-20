@@ -2,7 +2,7 @@ import { prisma, Status } from "@repo/database";
 import { Hono } from "hono";
 import authorized from "../middlewares/authorized";
 
-const guilds = new Hono().basePath("/guilds/:id/tickets/suggestions");
+const guilds = new Hono().basePath("/guilds/:id/suggestions");
 
 guilds.get("/", authorized, async (ctx) => {
   const id = ctx.req.param("id");

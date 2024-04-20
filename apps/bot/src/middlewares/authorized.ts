@@ -2,7 +2,7 @@ import { Context, Next } from "hono";
 import { deleteCookie, getCookie } from "hono/cookie";
 import DiscordOauth2 from "discord-oauth2";
 import { bot } from "../main.js";
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 
 const oauth = new DiscordOauth2();
 

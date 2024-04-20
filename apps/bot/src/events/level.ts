@@ -1,4 +1,4 @@
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import { Discord, On, ArgsOf } from "discordx";
 import { createEmbed } from "../utils/embeds";
 

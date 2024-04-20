@@ -1,4 +1,4 @@
-import { prisma, Status } from "database";
+import { prisma, Status } from "@repo/database";
 import { Hono } from "hono";
 import authorized from "../middlewares/authorized";
 

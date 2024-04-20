@@ -35,7 +35,7 @@ importers:
       '@hono/node-server':
         specifier: ^1.10.0
         version: 1.10.0
-      database:
+      '@repo/database':
         specifier: link:../../packages/database
         version: link:../../packages/database
       discord-oauth2:

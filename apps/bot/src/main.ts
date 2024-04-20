@@ -1,5 +1,5 @@
 import { dirname, importx } from "@discordx/importer";
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import type { Interaction, Message } from "discord.js";
 import { IntentsBitField } from "discord.js";
 import { Client } from "discordx";
@@ -50,7 +50,7 @@ bot.on("messageCreate", async (message: Message) => {
 
 async function run() {
   await importx(
-    `${dirname(import.meta.url)}/{events,commands,api}/**/*.{ts,js}`
+    `${dirname(import.meta.url)}/{events,commands,interactions,api}/**/*.{ts,js}`
   );
 
   if (!process.env.BOT_TOKEN) {

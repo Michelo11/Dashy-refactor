@@ -1,4 +1,4 @@
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import { MessageCollector, TextBasedChannel } from "discord.js";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -219,6 +219,182 @@ guilds.delete("/:ticket", authorized, async (ctx) => {
       id: ticketId,
     },
   });
+
+  return ctx.json({
+    success: true,
+  });
+});
+
+guilds.patch("/:ticket/edit/:message", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+  const ticketId = ctx.req.param("ticket");
+  const messageId = ctx.req.param("message");
+
+  const ticket = await prisma.ticket.findUnique({
+    where: {
+      id: ticketId,
+      guildId: id,
+    },
+  });
+
+  if (!ticket) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Ticket not found",
+    });
+  }
+
+  const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
+
+  if (!guild) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Guild not found",
+    });
+  }
+
+  const channel =
+    guild.channels.cache.get(ticket.id) ||
+    (await guild.channels.fetch(ticket.id));
+
+  if (!channel || !channel.isTextBased()) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Channel not found",
+    });
+  }
+
+  const message = await channel.messages.fetch(messageId);
+
+  if (!message || !message.editable) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Message not found or not editable",
+    });
+  }
+
+  const { content } = await ctx.req.json();
+
+  await message.edit(content);
+
+  return ctx.json({
+    success: true,
+  });
+});
+
+guilds.delete("/:ticket/delete/:message", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+  const ticketId = ctx.req.param("ticket");
+  const messageId = ctx.req.param("message");
+
+  const ticket = await prisma.ticket.findUnique({
+    where: {
+      id: ticketId,
+      guildId: id,
+    },
+  });
+
+  if (!ticket) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Ticket not found",
+    });
+  }
+
+  const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
+
+  if (!guild) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Guild not found",
+    });
+  }
+
+  const channel =
+    guild.channels.cache.get(ticket.id) ||
+    (await guild.channels.fetch(ticket.id));
+
+  if (!channel || !channel.isTextBased()) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Channel not found",
+    });
+  }
+
+  const message = await channel.messages.fetch(messageId);
+
+  if (!message || !message.deletable) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Message not found or not deletable",
+    });
+  }
+
+  await message.delete();
+
+  return ctx.json({
+    success: true,
+  });
+});
+
+guilds.post("/:ticket/reply", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+  const ticketId = ctx.req.param("ticket");
+  const messageId = ctx.req.query("message");
+
+  if (!messageId) {
+    ctx.status(400);
+    return ctx.json({
+      error: "Message query parameter is required",
+    });
+  }
+
+  const ticket = await prisma.ticket.findUnique({
+    where: {
+      id: ticketId,
+      guildId: id,
+    },
+  });
+
+  if (!ticket) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Ticket not found",
+    });
+  }
+
+  const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
+
+  if (!guild) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Guild not found",
+    });
+  }
+
+  const channel =
+    guild.channels.cache.get(ticket.id) ||
+    (await guild.channels.fetch(ticket.id));
+
+  if (!channel || !channel.isTextBased()) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Channel not found",
+    });
+  }
+
+  const message = await channel.messages.fetch(messageId);
+
+  if (!message) {
+    ctx.status(404);
+    return ctx.json({
+      error: "Message not found",
+    });
+  }
+
+  const { content } = await ctx.req.json();
+
+  await message.reply(content);
 
   return ctx.json({
     success: true,

@@ -1,4 +1,4 @@
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";

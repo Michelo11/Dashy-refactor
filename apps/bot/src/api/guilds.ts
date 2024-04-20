@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import authorized from "../middlewares/authorized";
 import { bot, hono } from "../main.js";
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import { User } from "discord-oauth2";
 
 type Variables = {

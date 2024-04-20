@@ -1,4 +1,4 @@
-import { Status, prisma } from "database";
+import { Status, prisma } from "@repo/database";
 import {
   ApplicationCommandOptionType,
   CommandInteraction,

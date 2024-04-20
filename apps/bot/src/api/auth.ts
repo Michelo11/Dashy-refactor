@@ -1,4 +1,4 @@
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import DiscordOauth2 from "discord-oauth2";
 import { Hono } from "hono";
 import { setCookie } from "hono/cookie";

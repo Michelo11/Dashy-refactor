@@ -1,4 +1,4 @@
-import { Embed } from "database";
+import { Embed } from "@repo/database";
 import { ColorResolvable, EmbedBuilder } from "discord.js";
 
 export function createEmbed(

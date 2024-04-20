@@ -1,4 +1,4 @@
-import { prisma } from "database";
+import { prisma } from "@repo/database";
 import { ButtonInteraction } from "discord.js";
 import { Discord, ButtonComponent } from "discordx";
 

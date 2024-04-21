@@ -1,13 +1,20 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { fontSans } from "@/config/fonts";
+import { siteConfig } from "@/config/site";
+import "@/styles/globals.css";
+import clsx from "clsx";
+import { Metadata } from "next";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Dashy",
-  description:
-    "Dashy is an amazing bot bundled with all the most useful features you need.",
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "black" }],
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -16,8 +23,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body
+        className={clsx(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+          <div className="relative flex flex-col h-screen">
+            {/* Navbar */}
+            <main className="container mx-auto">{children}</main>
+            {/* Footer */}
+          </div>
+        </Providers>
+      </body>
     </html>
   );
 }

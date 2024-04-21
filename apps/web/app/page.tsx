@@ -1,3 +1,3 @@
-export default function Page() {
-  return <main></main>;
+export default function Home() {
+  return <section>{/* Landing Page */}</section>;
 }

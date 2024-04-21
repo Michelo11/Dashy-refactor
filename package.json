@@ -2,7 +2,7 @@
   "name": "dashy",
   "private": true,
   "scripts": {
-    "build": "dotenv -- build",
+    "build": "dotenv -- turbo build",
     "dev": "dotenv -- turbo dev",
     "lint": "dotenv -- lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

@@ -10,6 +10,7 @@ import {
 } from "discord.js";
 import { ButtonComponent, Discord, Slash } from "discordx";
 import { createEmbed } from "../utils/embeds";
+import { saveTranscript } from "../utils/tickets.js";
 
 @Discord()
 class Ticket {
@@ -109,6 +110,7 @@ class Ticket {
       ],
     });
   }
+
   @Slash({ description: "Close a ticket channel", name: "close" })
   async close(interaction: CommandInteraction): Promise<void> {
     const guild = await prisma.guild.findFirst({
@@ -144,6 +146,8 @@ class Ticket {
     }
 
     const channel = interaction.channel as TextChannel;
+
+    await saveTranscript(channel, ticket.owner);
 
     await channel.delete();
 

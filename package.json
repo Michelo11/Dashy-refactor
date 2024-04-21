@@ -5,7 +5,8 @@
     "build": "dotenv -- build",
     "dev": "dotenv -- turbo dev",
     "lint": "dotenv -- lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "dotenv -- turbo test"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

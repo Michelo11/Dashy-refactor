@@ -7,6 +7,14 @@ import { prisma } from "@repo/database";
 const oauth = new DiscordOauth2();
 
 export default async function authorized(ctx: Context, next: Next) {
+  if (process.env.NODE_ENV === "test") {
+    ctx.set("user", {
+      id: "-1",
+      username: "test-agent",
+    });
+    return await next();
+  }
+
   const token = getCookie(ctx, "token");
 
   if (!token) {

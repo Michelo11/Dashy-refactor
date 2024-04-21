@@ -5,6 +5,8 @@ import DiscordOauth2 from "discord-oauth2";
 const oauth = new DiscordOauth2();
 
 export default async function authenticated(ctx: Context, next: Next) {
+  if (process.env.NODE_ENV === "test") return await next();
+
   const token = getCookie(ctx, "token");
 
   if (!token) {

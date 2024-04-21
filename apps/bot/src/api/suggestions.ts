@@ -1,6 +1,7 @@
 import { prisma, Status } from "@repo/database";
 import { Hono } from "hono";
 import authorized from "../middlewares/authorized";
+import { hono } from "../main";
 
 const guilds = new Hono().basePath("/guilds/:id/suggestions");
 
@@ -26,9 +27,7 @@ guilds.get("/", authorized, async (ctx) => {
     },
   });
 
-  return ctx.json({
-    suggestions,
-  });
+  return ctx.json(suggestions);
 });
 
 guilds.post("/:suggestion/accept", authorized, async (ctx) => {
@@ -60,6 +59,7 @@ guilds.post("/:suggestion/accept", authorized, async (ctx) => {
 
   return ctx.json({
     message: "Suggestion accepted",
+    success: true,
   });
 });
 
@@ -92,5 +92,9 @@ guilds.post("/:suggestion/deny", authorized, async (ctx) => {
 
   return ctx.json({
     message: "Suggestion denied",
+    success: true,
   });
 });
+
+hono.route("/", guilds);
+export default guilds;

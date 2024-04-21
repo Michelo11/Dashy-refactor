@@ -19,16 +19,16 @@ guilds.get("/bans", authorized, async (ctx) => {
 
   const bans = await guild.bans.fetch();
 
-  return ctx.json({
-    bans: bans.map((ban) => ({
+  return ctx.json(
+    bans.map((ban) => ({
       user: {
         id: ban.user.id,
         username: ban.user.username,
         avatar: ban.user.displayAvatarURL(),
       },
       reason: ban.reason,
-    })),
-  });
+    }))
+  );
 });
 
 guilds.post("/:member/unban", authorized, async (ctx) => {
@@ -54,11 +54,9 @@ guilds.post("/:member/unban", authorized, async (ctx) => {
   }
 
   return ctx.json({
-    member: {
-      id: member.id,
-      username: member.username,
-      avatar: member.displayAvatarURL(),
-    },
+    id: member.id,
+    username: member.username,
+    avatar: member.displayAvatarURL(),
   });
 });
 
@@ -79,9 +77,7 @@ guilds.get("/warns", authorized, async (ctx) => {
     },
   });
 
-  return ctx.json({
-    warns,
-  });
+  return ctx.json(warns);
 });
 
 guilds.post("/:member/unwarn", authorized, async (ctx) => {
@@ -131,3 +127,4 @@ guilds.post("/:member/unwarn", authorized, async (ctx) => {
 });
 
 hono.route("/", guilds);
+export default guilds;

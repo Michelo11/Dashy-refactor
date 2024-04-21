@@ -1,9 +1,10 @@
 import { prisma } from "@repo/database";
-import { MessageCollector, TextBasedChannel } from "discord.js";
+import { MessageCollector, TextBasedChannel, TextChannel } from "discord.js";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { bot, hono, upgradeWebSocket } from "../main.js";
 import authorized from "../middlewares/authorized";
+import { saveTranscript } from "../utils/tickets.js";
 
 const guilds = new Hono().basePath("/guilds/:id/tickets");
 
@@ -113,9 +114,7 @@ guilds.get("/", authorized, async (ctx) => {
     },
   });
 
-  return ctx.json({
-    tickets,
-  });
+  return ctx.json(tickets);
 });
 
 guilds.get("/:ticket", authorized, async (ctx) => {
@@ -161,8 +160,8 @@ guilds.get("/:ticket", authorized, async (ctx) => {
     limit: limit ? parseInt(limit) : 50,
   });
 
-  return ctx.json({
-    messages: messages.map((message) => ({
+  return ctx.json(
+    messages.map((message) => ({
       id: message.id,
       content: message.content,
       author: {
@@ -170,8 +169,8 @@ guilds.get("/:ticket", authorized, async (ctx) => {
         username: message.author.username,
         avatar: message.author.avatarURL(),
       },
-    })),
-  });
+    }))
+  );
 });
 
 guilds.delete("/:ticket", authorized, async (ctx) => {
@@ -211,6 +210,8 @@ guilds.delete("/:ticket", authorized, async (ctx) => {
       error: "Channel not found",
     });
   }
+
+  await saveTranscript(channel as TextChannel, ticket.owner);
 
   await channel.delete();
 
@@ -402,3 +403,4 @@ guilds.post("/:ticket/reply", authorized, async (ctx) => {
 });
 
 hono.route("/", guilds);
+export default guilds;

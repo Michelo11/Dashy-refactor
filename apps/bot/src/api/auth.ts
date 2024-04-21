@@ -4,13 +4,13 @@ import { Hono } from "hono";
 import { setCookie } from "hono/cookie";
 import { hono } from "../main.js";
 
-const auth = new Hono();
+const guilds = new Hono();
 
-auth.get("/login", async (ctx) => {
+guilds.get("/login", async (ctx) => {
   return ctx.redirect(process.env.LOGIN_URL!);
 });
 
-auth.get("/callback", async (ctx) => {
+guilds.get("/callback", async (ctx) => {
   const query = ctx.req.query();
   const oauth = new DiscordOauth2();
   const token = await oauth.tokenRequest({
@@ -50,4 +50,5 @@ auth.get("/callback", async (ctx) => {
   return ctx.redirect("/");
 });
 
-hono.route("/auth", auth);
+hono.route("/auth", guilds);
+export default guilds;

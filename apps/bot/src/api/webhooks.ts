@@ -43,7 +43,7 @@ guilds.post(
     const parsed = schema.safeParse(value);
 
     if (!parsed.success) {
-      ctx.status(401);
+      ctx.status(400);
       return ctx.json({
         error: parsed.error.errors,
       });
@@ -99,16 +99,16 @@ guilds.post("/:token", async (ctx) => {
 
   switch (webhook.action) {
     case WebhookAction.ASSIGN_ROLE:
-      const { userId } = await ctx.req.json();
+      const userId = await ctx.req.text();
 
       if (!userId) {
-        ctx.status(401);
+        ctx.status(400);
         return ctx.json({
           error: "User ID is required",
         });
       }
 
-      const { roleId } = JSON.parse(webhook.payload);
+      const roleId = webhook.payload;
 
       const guild = bot.guilds.cache.get(webhook.guildId);
 
@@ -147,3 +147,4 @@ guilds.delete("/:token", authorized, async (ctx) => {
 });
 
 hono.route("/", guilds);
+export default guilds;

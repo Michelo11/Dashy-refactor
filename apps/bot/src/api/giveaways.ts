@@ -31,9 +31,7 @@ guilds.get("/", authorized, async (ctx) => {
     },
   });
 
-  return ctx.json({
-    giveaways,
-  });
+  return ctx.json(giveaways);
 });
 
 const schema = z.object({
@@ -51,7 +49,7 @@ guilds.post(
     const parsed = schema.safeParse(value);
 
     if (!parsed.success) {
-      ctx.status(401);
+      ctx.status(400);
       return ctx.json({
         error: parsed.error.errors,
       });
@@ -79,7 +77,7 @@ guilds.post(
       });
     }
 
-    const giveaway = await prisma.giveaway.create({
+    let giveaway = await prisma.giveaway.create({
       data: {
         guildId: id,
         title: body.title,
@@ -121,7 +119,7 @@ guilds.post(
       ],
     });
 
-    await prisma.giveaway.update({
+    giveaway = await prisma.giveaway.update({
       where: {
         id: giveaway.id,
       },
@@ -130,9 +128,7 @@ guilds.post(
       },
     });
 
-    return ctx.json({
-      giveaway,
-    });
+    return ctx.json(giveaway);
   }
 );
 
@@ -166,9 +162,7 @@ guilds.get("/:giveaway", authorized, async (ctx) => {
     });
   }
 
-  return ctx.json({
-    giveaway,
-  });
+  return ctx.json(giveaway);
 });
 
 guilds.delete("/:giveaway", authorized, async (ctx) => {
@@ -213,3 +207,4 @@ guilds.delete("/:giveaway", authorized, async (ctx) => {
 });
 
 hono.route("/", guilds);
+export default guilds;

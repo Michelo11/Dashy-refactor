@@ -8,9 +8,7 @@ type Variables = {
   user: User;
 };
 
-const guilds = new Hono<{ Variables: Variables }>().basePath(
-  "/guilds/:id"
-);
+const guilds = new Hono<{ Variables: Variables }>().basePath("/guilds/:id");
 
 guilds.post("/rename", authorized, async (ctx) => {
   const id = ctx.req.param("id");
@@ -24,8 +22,9 @@ guilds.post("/rename", authorized, async (ctx) => {
   }
 
   const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
-
-  guild.members.me?.setNickname(body.name);
+  const member = guild.members.me || (await guild.members.fetch(bot.user!.id));
+  
+  await member.setNickname(body.name);
 
   await prisma.logRecord.create({
     data: {
@@ -38,6 +37,15 @@ guilds.post("/rename", authorized, async (ctx) => {
   return ctx.json({
     success: true,
   });
+});
+
+guilds.get("/name", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+
+  const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
+  const member = guild.members.me || (await guild.members.fetch(bot.user!.id));
+
+  return ctx.json(member?.nickname || member?.user.username);
 });
 
 guilds.post("/role", authorized, async (ctx) => {
@@ -84,13 +92,14 @@ guilds.get("/roles", authorized, async (ctx) => {
 
   const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
 
-  return ctx.json({
-    roles: guild.roles.cache.map((role) => ({
+  return ctx.json(
+    guild.roles.cache.map((role) => ({
       id: role.id,
       name: role.name,
       color: role.color,
-    })),
-  });
+    }))
+  );
 });
 
 hono.route("/", guilds);
+export default guilds;

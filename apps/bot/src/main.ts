@@ -27,7 +27,7 @@ export const bot = new Client({
     IntentsBitField.Flags.MessageContent,
   ],
 
-  silent: false,
+  silent: process.env.NODE_ENV !== "development",
 
   simpleCommand: {
     prefix: "!",

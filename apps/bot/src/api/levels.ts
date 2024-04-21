@@ -29,9 +29,7 @@ guilds.get("/", authorized, async (ctx) => {
     },
   });
 
-  return ctx.json({
-    levels,
-  });
+  return ctx.json(levels);
 });
 
 const schema = z.object({
@@ -48,7 +46,7 @@ guilds.post(
     const parsed = schema.safeParse(value);
 
     if (!parsed.success) {
-      ctx.status(401);
+      ctx.status(400);
       return ctx.json({
         error: parsed.error.errors,
       });
@@ -94,3 +92,4 @@ guilds.delete("/:level", authorized, async (ctx) => {
 });
 
 hono.route("/", guilds);
+export default guilds;

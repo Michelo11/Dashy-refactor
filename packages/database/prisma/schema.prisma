@@ -31,12 +31,6 @@ model Guild {
 
   warnEmbedId Int?
 
-  eventLogConfig EventLogConfig[]
-  logRecord      LogRecord[]
-  level          Level[]
-  ticket         Ticket[]
-  suggestion     Suggestion[]
-
   suggestionEmbed  Embed? @relation(fields: [suggestionEmbedId], references: [id], name: "suggestionEmbed", onDelete: Cascade)
   ticketPanelEmbed Embed? @relation(fields: [ticketPanelEmbedId], references: [id], name: "ticketPanelEmbed", onDelete: Cascade)
   ticketEmbed      Embed? @relation(fields: [ticketEmbedId], references: [id], name: "ticketEmbed", onDelete: Cascade)
@@ -44,9 +38,16 @@ model Guild {
   levelEmbed       Embed? @relation(fields: [levelEmbedId], references: [id], name: "levelEmbed", onDelete: Cascade)
   warnEmbed        Embed? @relation(fields: [warnEmbedId], references: [id], name: "warnEmbed", onDelete: Cascade)
 
-  giveaways Giveaway[]
-  warns     Warn[]
-  webhooks  Webhook[]
+  eventLogConfigs   EventLogConfig[]
+  logRecords        LogRecord[]
+  levels            Level[]
+  tickets           Ticket[]
+  suggestions       Suggestion[]
+  giveaways         Giveaway[]
+  warns             Warn[]
+  webhooks          Webhook[]
+  ticketTranscripts TicketTranscript[]
+  reactionRoles     ReactionRole[]
 }
 
 model GuildMember {
@@ -84,6 +85,7 @@ enum EventType {
   MESSAGE_DELETE
   GUILD_WARN_CREATE
   GUILD_WARN_DELETE
+  TRANSCRIPT_CREATE
 }
 
 model Embed {
@@ -129,6 +131,16 @@ model Ticket {
   id        String   @id
   createdAt DateTime @default(now())
   owner     String
+  guildId   String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+model TicketTranscript {
+  id        String   @id
+  createdAt DateTime @default(now())
+  owner     String
+  data      Json
   guildId   String
 
   guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
@@ -197,4 +209,25 @@ model Webhook {
 
 enum WebhookAction {
   ASSIGN_ROLE
+}
+
+model ReactionRole {
+  id          Int    @id @default(autoincrement())
+  roles       Role[]
+  title       String
+  description String
+  guildId     String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  id             Int     @id @default(autoincrement())
+  name           String
+  description    String?
+  emoji          String?
+  roleId         String
+  reactionRoleId Int
+
+  reactionRole ReactionRole @relation(fields: [reactionRoleId], references: [id], onDelete: Cascade)
 }

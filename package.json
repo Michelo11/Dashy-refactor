@@ -6,7 +6,8 @@
     "dev": "dotenv -- turbo dev",
     "lint": "dotenv -- lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "test": "dotenv -- turbo test"
+    "test": "dotenv -- turbo test",
+    "postinstall": "turbo db:generate"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

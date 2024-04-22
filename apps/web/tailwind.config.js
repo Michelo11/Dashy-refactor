@@ -18,22 +18,11 @@ module.exports = {
         "default-dark": {
           extend: "dark",
           colors: {
-            background: "#0D001A",
-            foreground: "#ffffff",
-            primary: {
-              50: "#D1E1FD",
-              100: "#A4C1FB",
-              200: "#749CF3",
-              300: "#517CE7",
-              400: "#1D4ED8",
-              500: "#153BB9",
-              600: "#0E2B9B",
-              700: "#091E7D",
-              800: "#051467",
-              900: "#051467",
-              DEFAULT: "#153BB9",
-              foreground: "#ffffff",
-            },
+            background: "#0d111c",
+            foreground: "#BDBDBD",
+            primary: "#1c4ed8",
+            secondary: "#153BB9",
+            modal: "#101220",
             focus: "#F182F6",
           },
           layout: {

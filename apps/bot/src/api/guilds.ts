@@ -3,12 +3,43 @@ import authorized from "../middlewares/authorized";
 import { bot, hono } from "../main.js";
 import { prisma } from "@repo/database";
 import { User } from "discord-oauth2";
+import authenticated from "../middlewares/authenticated";
+import { getCookie } from "hono/cookie";
+import DiscordOauth2 from "discord-oauth2";
 
 type Variables = {
   user: User;
 };
 
 const guilds = new Hono<{ Variables: Variables }>().basePath("/guilds/:id");
+
+hono.get("/guilds", authenticated, async (ctx) => {
+  const guilds = bot.guilds.cache
+    .filter((guild) => guild.members.cache.has(ctx.get("user").id))
+    .map((guild) => ({
+      id: guild.id,
+      name: guild.name,
+      icon: guild.iconURL(),
+    }));
+
+  return ctx.json(guilds);
+});
+
+hono.get("/guilds/me", authenticated, async (ctx) => {
+  const token = getCookie(ctx, "token");
+  const oauth = new DiscordOauth2();
+  const guilds = await oauth.getUserGuilds(token!);
+  
+  return ctx.json(
+    guilds.map((guild) => ({
+      id: guild.id,
+      name: guild.name,
+      icon: guild.icon,
+      bot: bot.guilds.cache.has(guild.id),
+      owner: guild.owner || false,
+    }))
+  );
+});
 
 guilds.post("/rename", authorized, async (ctx) => {
   const id = ctx.req.param("id");
@@ -23,7 +54,7 @@ guilds.post("/rename", authorized, async (ctx) => {
 
   const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
   const member = guild.members.me || (await guild.members.fetch(bot.user!.id));
-  
+
   await member.setNickname(body.name);
 
   await prisma.logRecord.create({

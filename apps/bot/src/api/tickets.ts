@@ -1,7 +1,6 @@
 import { prisma } from "@repo/database";
 import { MessageCollector, TextBasedChannel, TextChannel } from "discord.js";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { bot, hono, upgradeWebSocket } from "../main.js";
 import authorized from "../middlewares/authorized";
 import { saveTranscript } from "../utils/tickets.js";
@@ -10,14 +9,6 @@ const guilds = new Hono().basePath("/guilds/:id/tickets");
 
 guilds.get(
   "/:ticket/ws",
-  cors({
-    origin: "*",
-    allowHeaders: ["Authorization"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
-    exposeHeaders: ["Content-Length"],
-    maxAge: 600,
-    credentials: true,
-  }),
   authorized,
   upgradeWebSocket((ctx) => {
     let textChannel: TextBasedChannel | undefined;

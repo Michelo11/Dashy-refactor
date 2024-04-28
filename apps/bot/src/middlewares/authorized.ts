@@ -71,6 +71,7 @@ export default async function authorized(ctx: Context, next: Next) {
       error: "Forbidden",
     });
   } catch (error) {
+    console.log(error);
     deleteCookie(ctx, "token");
 
     ctx.status(401);

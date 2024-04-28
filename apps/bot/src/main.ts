@@ -1,21 +1,32 @@
 import { dirname, importx } from "@discordx/importer";
 import { prisma } from "@repo/database";
 import type { Interaction, Message } from "discord.js";
-import { IntentsBitField } from "discord.js";
+import { IntentsBitField, User } from "discord.js";
 import { Client } from "discordx";
 import { Hono } from "hono";
 import { createBunWebSocket } from "hono/bun";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
+import { cors } from "hono/cors";
 
 const { upgradeWebSocket: upgradeWebSocketFn, websocket } =
   createBunWebSocket();
 
 export const upgradeWebSocket = upgradeWebSocketFn;
 
-export const hono = new Hono();
+export const hono = new Hono<{ Variables: { user: User } }>();
 hono.use(logger());
 hono.use(prettyJSON());
+hono.use(
+  cors({
+    origin: process.env.APP_URL || "*",
+    allowHeaders: ["Authorization"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
+  })
+);
 
 export const bot = new Client({
   intents: [

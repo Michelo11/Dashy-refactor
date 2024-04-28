@@ -23,6 +23,7 @@ export default async function authenticated(ctx: Context, next: Next) {
 
     return await next();
   } catch (error) {
+    console.log(error)
     deleteCookie(ctx, "token");
 
     ctx.status(401);

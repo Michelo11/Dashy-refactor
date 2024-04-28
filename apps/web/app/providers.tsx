@@ -15,7 +15,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    <NextUIProvider navigate={router.push}>
+    <NextUIProvider navigate={router.push} className="flex flex-col min-h-screen">
       <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
     </NextUIProvider>
   );

@@ -6,7 +6,7 @@ export default function GetStarted() {
       <Card className="bg-primary">
         <CardBody className="mx-3 mb-3 mt-3">
           <h2 className="title text-white w-1/2">Ready to enhance your discord server?</h2>
-          <p className="paragraph uppercase mt-3">
+          <p className="paragraph !text-white uppercase mt-3">
             Join over 1834 servers owners
           </p>
           <Button

@@ -1,12 +1,24 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BsTwitterX } from "react-icons/bs";
 import { FaDiscord, FaGithub } from "react-icons/fa";
 import { IoIosMail } from "react-icons/io";
 
 export default function Footer() {
+  const route = usePathname();
+
   return (
-    <footer className="bg-[#111520] mt-[-100px]">
-      <div className="gap-6 flex-col items-center justify-center flex pt-[126px] p-3">
+    <footer
+      className={"bg-[#111520] " + (route === "/" ? "mt-[-100px]" : "mt-auto")}
+    >
+      <div
+        className={
+          "gap-6 flex-col items-center justify-center flex p-3 " +
+          (route === "/" ? "pt-[126px]" : "pt-6")
+        }
+      >
         <ul className="flex flex-col md:flex-row gap-6 items-center justify-center">
           <li>
             <Link
@@ -76,7 +88,7 @@ export default function Footer() {
           </Link>
         </div>
 
-        <p className="paragraph mt-3 mb-3">
+        <p className="text-base mt-3 mb-3">
           © 2024 All rights reserved. Made with ❤️ by{" "}
           <Link href="https://michelemanna.me">
             <span className="text-primary">Michele</span>

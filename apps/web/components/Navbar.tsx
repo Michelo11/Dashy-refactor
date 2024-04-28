@@ -1,13 +1,21 @@
-import { Button, Link } from "@nextui-org/react";
-import Image from "next/image";
+"use client";
 
-export default function App() {
+import { axiosClient } from "@/lib/fetcher";
+import { useFetcher } from "@/lib/fetcher.client";
+import { Button, Link, Spinner } from "@nextui-org/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+export default function Navbar() {
+  const { isLoading, data: session } = useFetcher("/auth/session");
+  const router = useRouter();
+
   return (
     <nav className="w-full py-3 ">
       <div className="flex justify-between border-1 border-gray-800 p-4 rounded-lg">
         <div className="flex gap-3 items-center">
           <Image
-            src="https://dashy.michelemanna.me/icon.svg"
+            src="/logo.png"
             alt="Navbar Logo"
             width={35}
             height={35}
@@ -49,14 +57,39 @@ export default function App() {
           </li>
         </ul>
 
-        <Button
-          as={Link}
-          color="primary"
-          href="#"
-          className="text-inherit uppercase"
-        >
-          Login
-        </Button>
+        {!isLoading ? (
+          session ? (
+            <Button
+              color="primary"
+              onClick={async () => {
+                await axiosClient.post("/auth/logout").then(() => {
+                  router.push("/");
+                });
+              }}
+              className="text-inherit uppercase"
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              as={Link}
+              color="primary"
+              href={process.env.NEXT_PUBLIC_API_URL + "/auth/login"}
+              className="text-inherit uppercase"
+            >
+              Login
+            </Button>
+          )
+        ) : (
+          <Button
+            as={Link}
+            color="primary"
+            href={"#"}
+            className="text-inherit uppercase"
+          >
+            <Spinner color="white" size="sm" />
+          </Button>
+        )}
       </div>
     </nav>
   );

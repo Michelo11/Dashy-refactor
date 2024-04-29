@@ -20,6 +20,7 @@ export default function Navbar() {
             width={35}
             height={35}
             draggable={false}
+            priority
           />
           <p className="font-bold text-inherit uppercase text-lg">Dashy</p>
         </div>
@@ -41,18 +42,17 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="#" className="uppercase" color="foreground">
+            <Link
+              href="https://discord.gg/PrsTsQ8GdU"
+              className="uppercase"
+              color="foreground"
+            >
               Support
             </Link>
           </li>
           <li>
             <Link href="#" className="uppercase" color="foreground">
               Docs
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="uppercase" color="foreground">
-              Donate
             </Link>
           </li>
         </ul>

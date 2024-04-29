@@ -1,13 +1,13 @@
 import { dirname, importx } from "@discordx/importer";
 import { prisma } from "@repo/database";
-import type { Interaction, Message } from "discord.js";
+import type { CommandInteraction, Interaction, Message } from "discord.js";
 import { IntentsBitField, User } from "discord.js";
-import { Client } from "discordx";
+import { Client, GuardFunction } from "discordx";
 import { Hono } from "hono";
 import { createBunWebSocket } from "hono/bun";
+import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
-import { cors } from "hono/cors";
 
 const { upgradeWebSocket: upgradeWebSocketFn, websocket } =
   createBunWebSocket();
@@ -28,6 +28,33 @@ hono.use(
   })
 );
 
+const StatsCounter: GuardFunction<CommandInteraction> = async (
+  interaction,
+  _,
+  next
+) => {
+  await next();
+
+  try {
+    if (!interaction.isCommand()) return;
+
+    await prisma.statistic.upsert({
+      where: {
+        id: "commands",
+      },
+      create: {
+        id: "commands",
+        value: 1,
+      },
+      update: {
+        value: {
+          increment: 1,
+        },
+      },
+    });
+  } catch (e) {}
+};
+
 export const bot = new Client({
   intents: [
     IntentsBitField.Flags.Guilds,
@@ -43,6 +70,8 @@ export const bot = new Client({
   simpleCommand: {
     prefix: "!",
   },
+
+  guards: [StatsCounter],
 });
 
 bot.once("ready", async () => {

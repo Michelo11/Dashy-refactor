@@ -16,6 +16,11 @@ export default function Page() {
       </p>
 
       <div className="flex flex-col flex-wrap items-center md:flex-row gap-3">
+        {guilds?.length === 0 && (
+          <p className="paragraph text-center">
+            You don't have any guilds yet. Create one to get started.
+          </p>
+        )}
         {guilds
           ?.filter((guild: any) => guild.owner)
           .map((guild: any) => (

@@ -1,9 +1,11 @@
+"use client";
+
 import { Button, Card, CardBody, Divider, Link } from "@nextui-org/react";
 import { TiTick } from "react-icons/ti";
 
-export default function Plans() {
+export default function Pricing() {
   return (
-    <section>
+    <section id="pricing">
       <h2 className="title text-center">Our Plans</h2>
       <p className="paragraph text-center">
         We offer two plans for simplicity.
@@ -47,7 +49,7 @@ export default function Plans() {
             <Button
               as={Link}
               color="primary"
-              href="#"
+              href={process.env.NEXT_PUBLIC_BOT_URL}
               fullWidth
               variant="flat"
               className="text-inherit uppercase mt-3"
@@ -92,9 +94,9 @@ export default function Plans() {
             </ul>
 
             <Button
-              as={Link}
               color="primary"
-              href="#"
+              as={Link}
+              href={process.env.NEXT_PUBLIC_API_URL + "/stripe/checkout"}
               fullWidth
               className="text-inherit uppercase mt-3"
             >

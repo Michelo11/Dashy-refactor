@@ -1,6 +1,13 @@
+"use client";
+
+import { useFetcher } from "@/lib/fetcher.client";
 import { Card, CardBody } from "@nextui-org/react";
 
 export default function WhyUs() {
+  const { data: guilds } = useFetcher("/stats/guilds");
+  const { data: commmands } = useFetcher("/stats/commands");
+  const { data: users } = useFetcher("/stats/users");
+
   return (
     <section id="whyus" className="lg:flex w-full items-center gap-3">
       <div className="w-1/2">
@@ -32,22 +39,22 @@ export default function WhyUs() {
       <div className="xl:w-1/2 w-full flex gap-3 xl:mt-0 mt-3">
         <Card className="w-1/3 h-36 bg-modal">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">9</h1>
-            <p className="paragraph">Command executed</p>
+            <h1 className="title text-primary">{commmands || 0}</h1>
+            <p className="paragraph text-center">Command executed</p>
           </CardBody>
         </Card>
 
         <Card className="w-1/3 h-36 bg-modal overflow-none">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">9</h1>
-            <p className="paragraph">Community guilds</p>
+            <h1 className="title text-primary">{guilds || 0}</h1>
+            <p className="paragraph text-center">Community guilds</p>
           </CardBody>
         </Card>
 
         <Card className="w-1/3 h-36 bg-modal">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">627</h1>
-            <p className="paragraph">Active users</p>
+            <h1 className="title text-primary">{users || 0}</h1>
+            <p className="paragraph text-center">Active users</p>
           </CardBody>
         </Card>
       </div>

@@ -13,7 +13,7 @@ export default function Header() {
         <Button
           as={Link}
           color="primary"
-          href="#"
+          href={process.env.NEXT_PUBLIC_BOT_URL}
           className="text-inherit w-fit uppercase"
         >
           Add to discord
@@ -21,7 +21,7 @@ export default function Header() {
         <Button
           as={Link}
           color="secondary"
-          href="#"
+          href="/dashboard"
           variant="flat"
           className="text-inherit w-fit uppercase"
         >

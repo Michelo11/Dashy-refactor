@@ -42,12 +42,22 @@ export default function Footer() {
           </li>
           <li>
             <Link
-              href="#"
+              href="#pricing"
               className="uppercase flex items-center gap-3"
               color="foreground"
             >
               <span className="w-4 h-1 bg-primary rounded-full" />
               Pricing
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="https://discord.gg/PrsTsQ8GdU"
+              className="uppercase flex items-center gap-3"
+              color="foreground"
+            >
+              <span className="w-4 h-1 bg-primary rounded-full" />
+              Support
             </Link>
           </li>
           <li>
@@ -58,16 +68,6 @@ export default function Footer() {
             >
               <span className="w-4 h-1 bg-primary rounded-full" />
               Docs
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="uppercase flex items-center gap-3"
-              color="foreground"
-            >
-              <span className="w-4 h-1 bg-primary rounded-full" />
-              Contact
             </Link>
           </li>
         </ul>

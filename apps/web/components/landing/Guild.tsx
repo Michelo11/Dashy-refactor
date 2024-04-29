@@ -1,19 +1,27 @@
 import Image from "next/image";
 
-export default function Guild() {
+export default function Guild({
+  name,
+  icon,
+  members,
+}: {
+  name: string;
+  icon: string;
+  members: number;
+}) {
   return (
     <div className="w-fit flex gap-3">
       <Image
-        src="https://dashy.michelemanna.me/icon.svg"
-        alt="Guild"
+        src={icon || "/logo.png"}
+        alt="Trending Guild"
         width={50}
         height={50}
         draggable={false}
       />
-      
+
       <div>
-        <p className="font-semibold text-lg">Guild Name</p>
-        <p className="paragraph !text-base">3000 Members</p>
+        <p className="font-semibold text-lg">{name}</p>
+        <p className="paragraph !text-base">{members} Members</p>
       </div>
     </div>
   );

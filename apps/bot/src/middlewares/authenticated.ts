@@ -10,10 +10,7 @@ export default async function authenticated(ctx: Context, next: Next) {
   const token = getCookie(ctx, "token");
 
   if (!token) {
-    ctx.status(401);
-    return ctx.json({
-      error: "Unauthorized",
-    });
+    return ctx.redirect(process.env.NEXT_PUBLIC_API_URL + "/auth/login");
   }
 
   try {
@@ -23,12 +20,9 @@ export default async function authenticated(ctx: Context, next: Next) {
 
     return await next();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     deleteCookie(ctx, "token");
 
-    ctx.status(401);
-    return ctx.json({
-      error: "Unauthorized",
-    });
+    return ctx.redirect(process.env.NEXT_PUBLIC_API_URL + "/auth/login");
   }
 }

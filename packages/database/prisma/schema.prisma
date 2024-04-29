@@ -12,6 +12,7 @@ model User {
   email    String @unique
   username String @unique
   avatar   String
+  stripeId String?
 }
 
 model Guild {
@@ -230,4 +231,9 @@ model Role {
   reactionRoleId Int
 
   reactionRole ReactionRole @relation(fields: [reactionRoleId], references: [id], onDelete: Cascade)
+}
+
+model Statistic {
+  id    String @id
+  value Int    @default(0)
 }

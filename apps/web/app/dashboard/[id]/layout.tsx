@@ -5,8 +5,7 @@ export default function AboutLayout({
 }) {
   return (
     <section>
-      {/* Sidebar */}
-      <div>{children}</div>
+      <div className="mt-20 mb-12">{children}</div>
     </section>
   );
 }

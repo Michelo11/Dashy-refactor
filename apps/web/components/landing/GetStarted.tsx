@@ -1,18 +1,27 @@
 "use client";
 
-import { useFetcher } from "@/lib/fetcher.client";
+import { axiosClient } from "@/lib/fetcher";
 import { Button, Card, CardBody, Link } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function GetStarted() {
-  const { data: guilds } = useFetcher("/stats/guilds");
+  const query = useQuery({
+    queryKey: ["stats-guilds"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/stats/guilds");
+      return res.data;
+    },
+  });
 
   return (
     <section>
       <Card className="bg-primary">
         <CardBody className="mx-3 mb-3 mt-3">
-          <h2 className="title text-white w-1/2">Ready to enhance your discord server?</h2>
+          <h2 className="title text-white w-1/2">
+            Ready to enhance your discord server?
+          </h2>
           <p className="paragraph !text-white uppercase mt-3">
-            Join over {guilds} servers owners
+            Join over {query.data || 0} servers owners
           </p>
           <Button
             as={Link}

@@ -1,12 +1,33 @@
 "use client";
 
-import { useFetcher } from "@/lib/fetcher.client";
+import { axiosClient } from "@/lib/fetcher";
 import { Card, CardBody } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function WhyUs() {
-  const { data: guilds } = useFetcher("/stats/guilds");
-  const { data: commmands } = useFetcher("/stats/commands");
-  const { data: users } = useFetcher("/stats/users");
+  const guilds = useQuery({
+    queryKey: ["stats-guilds"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/stats/guilds");
+      return res.data;
+    },
+  });
+
+  const commands = useQuery({
+    queryKey: ["stats-commands"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/stats/commands");
+      return res.data;
+    },
+  });
+  
+  const users = useQuery({
+    queryKey: ["stats-users"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/stats/users");
+      return res.data;
+    },
+  });
 
   return (
     <section id="whyus" className="lg:flex w-full items-center gap-3">
@@ -39,21 +60,21 @@ export default function WhyUs() {
       <div className="xl:w-1/2 w-full flex gap-3 xl:mt-0 mt-3">
         <Card className="w-1/3 h-36 bg-modal">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">{commmands || 0}</h1>
+            <h1 className="title text-primary">{commands.data || 0}</h1>
             <p className="paragraph text-center">Command executed</p>
           </CardBody>
         </Card>
 
         <Card className="w-1/3 h-36 bg-modal overflow-none">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">{guilds || 0}</h1>
+            <h1 className="title text-primary">{guilds.data || 0}</h1>
             <p className="paragraph text-center">Community guilds</p>
           </CardBody>
         </Card>
 
         <Card className="w-1/3 h-36 bg-modal">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">{users || 0}</h1>
+            <h1 className="title text-primary">{users.data || 0}</h1>
             <p className="paragraph text-center">Active users</p>
           </CardBody>
         </Card>

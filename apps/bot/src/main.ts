@@ -20,9 +20,9 @@ hono.use(prettyJSON());
 hono.use(
   cors({
     origin: process.env.APP_URL || "*",
-    allowHeaders: ["Authorization"],
+    allowHeaders: ["Authorization", "Content-Type"],
     allowMethods: ["POST", "GET", "OPTIONS"],
-    exposeHeaders: ["Content-Length"],
+    exposeHeaders: ["Content-Length", "Content-Type"],
     maxAge: 600,
     credentials: true,
   })

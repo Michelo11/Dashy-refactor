@@ -1,11 +1,18 @@
 "use client";
 
-import { useFetcher } from "@/lib/fetcher.client";
 import { Button, Card, CardFooter, Link } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { axiosClient } from "@/lib/fetcher";
 
 export default function Page() {
-  const { data: guilds } = useFetcher("/guilds/me");
+  const query = useQuery({
+    queryKey: ["my-guilds"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/guilds/me");
+      return res.data;
+    },
+  });
 
   return (
     <section className="mt-20 flex flex-col gap-3 mb-3">
@@ -16,12 +23,12 @@ export default function Page() {
       </p>
 
       <div className="flex flex-col flex-wrap items-center md:flex-row gap-3">
-        {guilds?.length === 0 && (
-          <p className="paragraph text-center">
+        {query.data?.length === 0 && (
+          <p className="paragraph">
             You don't have any guilds yet. Create one to get started.
           </p>
         )}
-        {guilds
+        {query.data
           ?.filter((guild: any) => guild.owner)
           .map((guild: any) => (
             <Card

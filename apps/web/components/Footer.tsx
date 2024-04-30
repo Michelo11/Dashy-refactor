@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <footer
-      className={"bg-[#111520] " + (route === "/" ? "mt-[-100px]" : "mt-auto")}
+      className={"bg-modalForeground " + (route === "/" ? "mt-[-100px]" : "mt-auto")}
     >
       <div
         className={
@@ -88,7 +88,7 @@ export default function Footer() {
           </Link>
         </div>
 
-        <p className="text-base mt-3 mb-3">
+        <p className="paragraph-2 mt-3 mb-3">
           © 2024 All rights reserved. Made with ❤️ by{" "}
           <Link href="https://michelemanna.me">
             <span className="text-primary">Michele</span>

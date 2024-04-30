@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id       String @id
-  email    String @unique
-  username String @unique
+  id       String  @id
+  email    String  @unique
+  username String  @unique
   avatar   String
   stripeId String?
 }
 
 model Guild {
-  id   String  @id
-  role String?
+  id     String  @id
+  role   String?
+  prefix String  @default("!")
 
   suggestionEmbedId Int?
   suggestionChannel String?
@@ -139,6 +140,7 @@ model Ticket {
 
 model TicketTranscript {
   id        String   @id
+  name      String
   createdAt DateTime @default(now())
   owner     String
   data      Json

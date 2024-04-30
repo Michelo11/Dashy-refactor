@@ -39,6 +39,19 @@ export default async function authorized(ctx: Context, next: Next) {
       });
     }
 
+    const guildData = await prisma.guild.findUnique({
+      where: {
+        id: guildId,
+      },
+    });
+
+    if (!guildData)
+      await prisma.guild.create({
+        data: {
+          id: guildId,
+        },
+      });
+
     if (discordGuild.ownerId === user.id) return await next();
 
     const member = await discordGuild.members.fetch(user.id);
@@ -49,12 +62,6 @@ export default async function authorized(ctx: Context, next: Next) {
         error: "Forbidden",
       });
     }
-
-    const guildData = await prisma.guild.findUnique({
-      where: {
-        id: guildId,
-      },
-    });
 
     if (!guildData) {
       ctx.status(404);

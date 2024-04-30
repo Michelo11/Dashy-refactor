@@ -29,7 +29,7 @@ hono.get("/guilds/me", authenticated, async (ctx) => {
   const token = getCookie(ctx, "token");
   const oauth = new DiscordOauth2();
   const guilds = await oauth.getUserGuilds(token!);
-  
+
   return ctx.json(
     guilds.map((guild) => ({
       id: guild.id,
@@ -68,6 +68,57 @@ guilds.post("/rename", authorized, async (ctx) => {
   return ctx.json({
     success: true,
   });
+});
+
+guilds.post("/prefix", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+  const body = await ctx.req.json();
+
+  if (!body.prefix) {
+    ctx.status(400);
+    return ctx.json({
+      error: "Prefix is required",
+    });
+  }
+
+  const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
+
+  await prisma.guild.upsert({
+    where: {
+      id: guild.id,
+    },
+    create: {
+      id: guild.id,
+      prefix: body.prefix,
+    },
+    update: {
+      prefix: body.prefix,
+    },
+  });
+
+  await prisma.logRecord.create({
+    data: {
+      guildId: guild.id,
+      message: `Prefix set to ${body.prefix}`,
+      author: ctx.get("user").id,
+    },
+  });
+
+  return ctx.json({
+    success: true,
+  });
+});
+
+guilds.get("/prefix", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+
+  const guild = await prisma.guild.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return ctx.json(guild!.prefix);
 });
 
 guilds.get("/name", authorized, async (ctx) => {
@@ -130,6 +181,18 @@ guilds.get("/roles", authorized, async (ctx) => {
       color: role.color,
     }))
   );
+});
+
+guilds.get("/role", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+
+  const guild = await prisma.guild.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return ctx.json(guild!.role);
 });
 
 hono.route("/", guilds);

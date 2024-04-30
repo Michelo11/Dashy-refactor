@@ -23,6 +23,7 @@ module.exports = {
             primary: "#1c4ed8",
             secondary: "#153BB9",
             modal: "#101220",
+            modalForeground: "#111520",
             focus: "#F182F6",
           },
           layout: {

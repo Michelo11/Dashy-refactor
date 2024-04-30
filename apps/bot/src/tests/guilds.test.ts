@@ -24,6 +24,39 @@ describe("Manage Guilds", () => {
     ctx();
   });
 
+  test("Set Prefix [/prefix]", async (ctx) => {
+    const res = await guilds.request(base + "/prefix", {
+      method: "POST",
+      body: JSON.stringify({
+        prefix: "?",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    expect(res.status).toBe(200);
+
+    const response = await res.json();
+    expect(response.success).toBe(true);
+
+    ctx();
+  });
+
+  test("Get Prefix [/prefix]", async (ctx) => {
+    const res = await guilds.request(base + "/prefix", {
+      method: "GET",
+    });
+
+    expect(res.status).toBe(200);
+
+    const response = await res.json();
+
+    expect(response).toBe("?");
+
+    ctx();
+  });
+
   test("Get Bot Name [/name]", async (ctx) => {
     const res = await guilds.request(base + "/name", {
       method: "GET",
@@ -73,6 +106,20 @@ describe("Manage Guilds", () => {
       name: "Test Role",
       color: 0,
     });
+
+    ctx();
+  });
+
+  test("Get Role [/role]", async (ctx) => {
+    const res = await guilds.request(base + "/role", {
+      method: "GET",
+    });
+
+    expect(res.status).toBe(200);
+
+    const response = await res.json();
+
+    expect(response).toBe("1231591974830604348");
 
     ctx();
   });

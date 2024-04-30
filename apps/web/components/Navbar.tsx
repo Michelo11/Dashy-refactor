@@ -1,13 +1,23 @@
 "use client";
 
 import { axiosClient } from "@/lib/fetcher";
-import { useFetcher } from "@/lib/fetcher.client";
 import { Button, Link, Spinner } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Navbar() {
-  const { isLoading, data: session } = useFetcher("/auth/session");
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const res = await axiosClient.get("/auth/session");
+      return res.data;
+    },
+  });
+
   const router = useRouter();
 
   return (
@@ -57,12 +67,13 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {!isLoading ? (
-          session ? (
+        {!query.isLoading ? (
+          query.data ? (
             <Button
               color="primary"
               onClick={async () => {
                 await axiosClient.post("/auth/logout").then(() => {
+                  queryClient.invalidateQueries({ queryKey: ["session"] });
                   router.push("/");
                 });
               }}

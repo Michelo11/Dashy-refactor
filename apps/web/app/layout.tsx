@@ -6,6 +6,8 @@ import { Metadata, Viewport } from "next";
 import Navbar from "../components/Navbar";
 import { Providers } from "./providers";
 import Footer from "@/components/Footer";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -28,23 +30,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
-      <head />
-      <body
-        suppressHydrationWarning={true}
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased default-dark",
-          fontSans.variable
-        )}
-      >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="lg:w-2/3 w-full relative flex flex-col mx-auto lg:px-0 px-3">
-            <Navbar />
-            <main>{children}</main>
-          </div>
-          <Footer />
-        </Providers>
-      </body>
-    </html>
+    <ReactQueryClientProvider>
+      <html lang="en" suppressHydrationWarning={true}>
+        <head />
+        <body
+          suppressHydrationWarning={true}
+          className={clsx(
+            "min-h-screen bg-background font-sans antialiased default-dark",
+            fontSans.variable
+          )}
+        >
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+            <div className="lg:w-2/3 w-full relative flex flex-col mx-auto lg:px-0 px-3">
+              <Navbar />
+              <main>{children}</main>
+            </div>
+            <Footer />
+            <ReactQueryDevtools />
+          </Providers>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }

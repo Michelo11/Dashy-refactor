@@ -20,6 +20,7 @@ export async function saveTranscript(channel: TextChannel, ownerId: string) {
 
   const transcript = await prisma.ticketTranscript.create({
     data: {
+      name: channel.name,
       owner: ownerId,
       id: channel.id,
       data: json,

@@ -10,6 +10,10 @@
   @apply text-lg text-foreground;
 }
 
+.paragraph-2 {
+  @apply text-small text-default-400;
+}
+
 * {
   scroll-behavior: smooth;
 }

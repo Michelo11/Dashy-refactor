@@ -68,6 +68,12 @@ const modules = [
     link: "giveaways",
   },
   {
+    title: "Webhooks",
+    description:
+      "Run specific actions based on an URL trigger you can invoke externally.",
+    link: "webhooks",
+  },
+  {
     title: "Socials",
     description: "Send an alert when a post is publishied in a social network.",
     link: "socials",

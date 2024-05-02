@@ -14,7 +14,7 @@ export default function Module({
   id: string;
 }) {
   return (
-    <Card className="w-full h-[130px] bg-modalForeground">
+    <Card className="w-full h-[130px] bg-modal">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
           <div className="flex flex-col gap-1 items-start justify-center">
@@ -23,6 +23,7 @@ export default function Module({
             </h4>
           </div>
         </div>
+        
         <Button
           as={Link}
           color="primary"
@@ -32,6 +33,7 @@ export default function Module({
           View
         </Button>
       </CardHeader>
+
       <CardBody className="px-3 py-0 paragraph-2">
         <p>{description}</p>
       </CardBody>

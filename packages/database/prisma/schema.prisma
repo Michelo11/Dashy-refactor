@@ -20,18 +20,18 @@ model Guild {
   role   String?
   prefix String  @default("!")
 
-  suggestionEmbedId Int?
+  suggestionEmbedId String?
   suggestionChannel String?
 
-  ticketPanelEmbedId Int?
+  ticketPanelEmbedId String?
   ticketCategory     String?
-  ticketEmbedId      Int?
+  ticketEmbedId      String?
 
-  giveawayEmbedId Int?
+  giveawayEmbedId String?
 
-  levelEmbedId Int?
+  levelEmbedId String?
 
-  warnEmbedId Int?
+  warnEmbedId String?
 
   suggestionEmbed  Embed? @relation(fields: [suggestionEmbedId], references: [id], name: "suggestionEmbed", onDelete: Cascade)
   ticketPanelEmbed Embed? @relation(fields: [ticketPanelEmbedId], references: [id], name: "ticketPanelEmbed", onDelete: Cascade)
@@ -64,14 +64,15 @@ model GuildMember {
 }
 
 model EventLogConfig {
-  id        Int       @id @default(autoincrement())
   guildId   String
   channelId String
   event     EventType
-  embedId   Int
+  embedId   String?
 
-  embed Embed @relation(fields: [embedId], references: [id], onDelete: Cascade)
-  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  embed Embed? @relation(fields: [embedId], references: [id], onDelete: Cascade)
+  guild Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@id([guildId, event])
 }
 
 enum EventType {
@@ -91,7 +92,7 @@ enum EventType {
 }
 
 model Embed {
-  id          Int     @id @default(autoincrement())
+  id          String  @id @default(cuid())
   title       String?
   description String?
   color       String  @default("#1D4ED8")

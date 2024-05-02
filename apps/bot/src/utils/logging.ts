@@ -17,7 +17,7 @@ export async function logAction(
     },
   });
 
-  if (!settings) return;
+  if (!settings?.embed) return;
 
   const channel =
     guild.channels.cache.get(settings.channelId) ||

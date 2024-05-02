@@ -1,11 +1,19 @@
 "use client";
 
 import { axiosClient } from "@/lib/fetcher";
-import { Button, Link, Spinner } from "@nextui-org/react";
-import { useQuery } from "@tanstack/react-query";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
+  Skeleton
+} from "@nextui-org/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function Navbar() {
   const queryClient = useQueryClient();
@@ -69,18 +77,36 @@ export default function Navbar() {
 
         {!query.isLoading ? (
           query.data ? (
-            <Button
-              color="primary"
-              onClick={async () => {
-                await axiosClient.post("/auth/logout").then(() => {
-                  queryClient.invalidateQueries({ queryKey: ["session"] });
-                  router.push("/");
-                });
-              }}
-              className="text-inherit uppercase"
-            >
-              Logout
-            </Button>
+            <Dropdown placement="bottom-end" className="bg-modalForeground">
+              <DropdownTrigger>
+                <Avatar
+                  src={`https://cdn.discordapp.com/avatars/${query.data.id}/${query.data.avatar}.png`}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <p className="font-semibold">Signed in as</p>
+                  <p className="font-semibold">{query.data.username}</p>
+                </DropdownItem>
+                <DropdownItem href="/dashboard">My Guilds</DropdownItem>
+                <DropdownItem
+                  href={process.env.NEXT_PUBLIC_API_URL + "/stripe/portal"}
+                >
+                  Billing
+                </DropdownItem>
+                <DropdownItem
+                  color="danger"
+                  onClick={async () => {
+                    await axiosClient.post("/auth/logout").then(() => {
+                      queryClient.invalidateQueries({ queryKey: ["session"] });
+                      router.push("/");
+                    });
+                  }}
+                >
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           ) : (
             <Button
               as={Link}
@@ -92,14 +118,7 @@ export default function Navbar() {
             </Button>
           )
         ) : (
-          <Button
-            as={Link}
-            color="primary"
-            href={"#"}
-            className="text-inherit uppercase"
-          >
-            <Spinner color="white" size="sm" />
-          </Button>
+          <Skeleton className="flex rounded-full w-10 h-10 !bg-modal" />
         )}
       </div>
     </nav>

@@ -1,11 +1,11 @@
-import { Hono } from "hono";
-import authorized from "../middlewares/authorized";
-import { bot, hono } from "../main.js";
 import { prisma } from "@repo/database";
-import { User } from "discord-oauth2";
-import authenticated from "../middlewares/authenticated";
+import DiscordOauth2, { User } from "discord-oauth2";
+import { ChannelType } from "discord.js";
+import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
-import DiscordOauth2 from "discord-oauth2";
+import { bot, hono } from "../main.js";
+import authenticated from "../middlewares/authenticated";
+import authorized from "../middlewares/authorized";
 
 type Variables = {
   user: User;
@@ -193,6 +193,21 @@ guilds.get("/role", authorized, async (ctx) => {
   });
 
   return ctx.json(guild!.role);
+});
+
+guilds.get("/channels", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+
+  const guild = bot.guilds.cache.get(id) || (await bot.guilds.fetch(id));
+
+  return ctx.json(
+    guild.channels.cache
+      .filter((channel) => channel.type === ChannelType.GuildText)
+      .map((channel) => ({
+        id: channel.id,
+        name: channel.name,
+      }))
+  );
 });
 
 hono.route("/", guilds);

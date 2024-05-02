@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardFooter, Link } from "@nextui-org/react";
+import { Button, Card, CardFooter, Link, Skeleton } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { axiosClient } from "@/lib/fetcher";
@@ -28,6 +28,13 @@ export default function Page() {
             You don't have any guilds yet. Create one to get started.
           </p>
         )}
+
+        {query.isLoading && (
+          <Card className="w-[200px] h-[200px] relative !bg-modal" radius="lg">
+            <Skeleton className="rounded-lg w-[calc(100%_-_8px)] h-[42px] flex flex-col !bg-modal absolute bottom-2 left-1" />
+          </Card>
+        )}
+
         {query.data
           ?.filter((guild: any) => guild.owner)
           .map((guild: any) => (

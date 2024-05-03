@@ -16,7 +16,7 @@ export function createEmbed(
   return new EmbedBuilder()
     .setTitle(title)
     .setDescription(description ? description.replaceAll("\\n", "\n") : null)
-    .setColor(embedData.color as ColorResolvable)
+    .setColor(embedData.color as ColorResolvable || "#1D4ED8")
     .setTimestamp()
     .setFooter({
       text: "Dashy",

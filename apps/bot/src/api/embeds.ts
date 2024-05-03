@@ -1,10 +1,10 @@
-import { EventType, prisma } from "@repo/database";
+import { prisma } from "@repo/database";
 import { User } from "discord-oauth2";
 import { Hono } from "hono";
-import { bot, hono } from "../main.js";
-import authorized from "../middlewares/authorized";
-import { z } from "zod";
 import { validator } from "hono/validator";
+import { z } from "zod";
+import { hono } from "../main.js";
+import authorized from "../middlewares/authorized";
 
 type Variables = {
   user: User;
@@ -19,8 +19,11 @@ const schema = z.object({
   description: z.string().optional(),
   color: z
     .string()
-    .refine((value) => /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value))
-    .optional(),
+    .optional()
+    .refine(
+      (value) => !value || /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value),
+      "Color must be an hex (e.g. #000000)"
+    ),
 });
 
 guilds.post(
@@ -39,7 +42,6 @@ guilds.post(
     return parsed.data;
   }),
   async (ctx) => {
-    const id = ctx.req.param("id");
     const embedId = ctx.req.param("embedId");
     const body = await ctx.req.json();
 
@@ -48,8 +50,9 @@ guilds.post(
         id: embedId,
       },
       data: {
-        ...body,
-        guildId: id,
+        title: body.title || undefined,
+        description: body.description || undefined,
+        color: body.color || undefined,
       },
     });
 

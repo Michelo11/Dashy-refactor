@@ -21,7 +21,7 @@ hono.use(
   cors({
     origin: process.env.APP_URL || "*",
     allowHeaders: ["Authorization", "Content-Type"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
+    allowMethods: ["POST", "GET", "OPTIONS", "PUT", "DELETE"],
     exposeHeaders: ["Content-Length", "Content-Type"],
     maxAge: 600,
     credentials: true,

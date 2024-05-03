@@ -95,11 +95,24 @@ export default function Event({
         <Button
           as={Link}
           color="primary"
-          variant="flat"
-          href="/"
+          href={`embeds/${getEvent.data?.embedId}`}
           className="uppercase"
         >
           Edit Embed
+        </Button>
+
+        <Button
+          color="danger"
+          variant="flat"
+          className="uppercase"
+          onClick={async () => {
+            await axiosClient.delete(`/guilds/${guildId}/events/${id}`);
+            queryClient.invalidateQueries({ queryKey: ["event", guildId, id] });
+
+            location.reload();
+          }}
+        >
+          Delete
         </Button>
       </CardBody>
     </Card>

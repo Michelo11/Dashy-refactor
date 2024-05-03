@@ -85,12 +85,55 @@ guilds.get("/:eventId", authorized, async (ctx) => {
     },
   });
 
-  return ctx.json(
-    data || {
-      channelId: null,
-      embedId: null,
-    }
-  );
+  let embedId = data?.embedId;
+
+  if (!embedId) {
+    embedId = (
+      await prisma.embed.create({
+        data: {},
+
+        select: {
+          id: true,
+        },
+      })
+    ).id;
+  }
+
+  await prisma.eventLogConfig.updateMany({
+    where: {
+      guildId: id,
+      event: eventId as EventType,
+    },
+    data: {
+      embedId,
+    },
+  });
+
+  return ctx.json({
+    channelId: data?.channelId || null,
+    embedId,
+  });
+});
+
+guilds.delete("/:eventId", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+  const eventId = ctx.req.param("eventId");
+
+  if (!Object.values(EventType).includes(eventId as any)) {
+    ctx.status(400);
+    return ctx.json({
+      error: "Event not found",
+    });
+  }
+
+  await prisma.eventLogConfig.deleteMany({
+    where: {
+      guildId: id,
+      event: eventId as EventType,
+    },
+  });
+
+  return ctx.json({ success: true });
 });
 
 hono.route("/", guilds);

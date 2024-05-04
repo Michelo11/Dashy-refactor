@@ -1,3 +1,5 @@
+"use client";
+
 import Module from "@/components/dashboard/Module";
 
 const modules = [

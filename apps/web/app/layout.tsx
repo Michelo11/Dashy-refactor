@@ -1,13 +1,15 @@
+import Footer from "@/components/Footer";
+import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
+import "react-toastify/dist/ReactToastify.css";
 import "@/styles/globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import clsx from "clsx";
 import { Metadata, Viewport } from "next";
+import { ToastContainer } from "react-toastify";
 import Navbar from "../components/Navbar";
 import { Providers } from "./providers";
-import Footer from "@/components/Footer";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +48,8 @@ export default function RootLayout({
               <main>{children}</main>
             </div>
             <Footer />
-            <ReactQueryDevtools />
+            <ToastContainer position="bottom-right" theme="colored"  />
+            <ReactQueryDevtools buttonPosition="bottom-left" />
           </Providers>
         </body>
       </html>

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.Toastify__toast-theme--colored {
+  @apply text-small text-default-400;
+}
+
 .title {
   @apply text-4xl font-bold;
 }

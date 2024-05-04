@@ -4,6 +4,7 @@ import { axiosClient } from "@/lib/fetcher";
 import { Button, Input, Textarea } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Page({
   params: { id, embedId },
@@ -43,6 +44,7 @@ export default function Page({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["embed", embedId] });
+      toast.success("Embed updated!");
     },
   });
 
@@ -71,7 +73,6 @@ export default function Page({
             )?.message
           }
           placeholder={getEmbed.data?.title || "Enter a title"}
-          description={title && embed.isSuccess ? "Title updated!" : undefined}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
 
@@ -92,9 +93,6 @@ export default function Page({
             )?.message
           }
           placeholder={getEmbed.data?.description || "Enter a description"}
-          description={
-            description && embed.isSuccess ? "Description updated!" : undefined
-          }
           classNames={{ inputWrapper: "!bg-modalForeground !h-[120px]" }}
         />
 
@@ -115,7 +113,6 @@ export default function Page({
             )?.message
           }
           placeholder={getEmbed.data?.color || "Enter a color"}
-          description={color && embed.isSuccess ? "Color updated!" : undefined}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
 

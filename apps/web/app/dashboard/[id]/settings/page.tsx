@@ -4,6 +4,7 @@ import { axiosClient } from "@/lib/fetcher";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Page({
   params: { id },
@@ -25,6 +26,7 @@ export default function Page({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["name", id] });
+      toast.success("Name updated!");
     },
   });
 
@@ -35,6 +37,7 @@ export default function Page({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["prefix", id] });
+      toast.success("Prefix updated!");
     },
   });
 
@@ -45,6 +48,7 @@ export default function Page({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["role", id] });
+      toast.success("Role updated!");
     },
   });
 
@@ -96,7 +100,6 @@ export default function Page({
           isInvalid={rename.isError}
           errorMessage={(rename.error as any)?.response.data.error}
           placeholder={getName.data}
-          description={rename.isSuccess ? "Name updated!" : undefined}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
 
@@ -108,7 +111,6 @@ export default function Page({
           isInvalid={prefix.isError}
           errorMessage={(prefix.error as any)?.response.data.error}
           placeholder={getPrefix.data}
-          description={prefix.isSuccess ? "Prefix updated!" : undefined}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
       </div>
@@ -123,7 +125,6 @@ export default function Page({
         onChange={(event) => setRole(event.target.value)}
         errorMessage={(role.error as any)?.response.data.error}
         isInvalid={role.isError}
-        description={role.isSuccess ? "Role updated!" : undefined}
         classNames={{
           trigger: "!bg-modalForeground",
           popoverContent: "!bg-modalForeground",

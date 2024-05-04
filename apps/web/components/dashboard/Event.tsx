@@ -11,6 +11,8 @@ import {
 } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Event({
   guildId,
@@ -48,6 +50,7 @@ export default function Event({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["event", guildId, id] });
+      toast.success("Channel updated!");
     },
   });
 
@@ -74,11 +77,11 @@ export default function Event({
           }
           value={getEvent.data?.channelId}
           onChange={(event) => {
+            if (!event.target.value) return;
             channel.mutate(event.target.value);
           }}
           errorMessage={(channel.error as any)?.response.data.error}
           isInvalid={channel.isError}
-          description={channel.isSuccess ? "Channel updated!" : undefined}
           classNames={{
             trigger: "!bg-modalForeground",
             popoverContent: "!bg-modalForeground",

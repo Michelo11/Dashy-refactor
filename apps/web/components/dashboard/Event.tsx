@@ -52,6 +52,9 @@ export default function Event({
       queryClient.invalidateQueries({ queryKey: ["event", guildId, id] });
       toast.success("Channel updated!");
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
   });
 
   return (
@@ -80,8 +83,6 @@ export default function Event({
             if (!event.target.value) return;
             channel.mutate(event.target.value);
           }}
-          errorMessage={(channel.error as any)?.response.data.error}
-          isInvalid={channel.isError}
           classNames={{
             trigger: "!bg-modalForeground",
             popoverContent: "!bg-modalForeground",

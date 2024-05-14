@@ -46,6 +46,9 @@ export default function Page({
       queryClient.invalidateQueries({ queryKey: ["embed", embedId] });
       toast.success("Embed updated!");
     },
+    onError: (error: any) => {
+      toast.error(error.response.data.error[0]?.message);
+    },
   });
 
   return (
@@ -61,17 +64,6 @@ export default function Page({
           label="Title"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          isInvalid={
-            embed.isError &&
-            (embed.error as any)?.response.data.error.find((error: any) =>
-              error.path.includes("title")
-            ) != null
-          }
-          errorMessage={
-            (embed.error as any)?.response.data.error.find((error: any) =>
-              error.path.includes("title")
-            )?.message
-          }
           placeholder={getEmbed.data?.title || "Enter a title"}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
@@ -81,17 +73,6 @@ export default function Page({
           label="Description"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          isInvalid={
-            embed.isError &&
-            (embed.error as any)?.response.data.error.find((error: any) =>
-              error.path.includes("description")
-            ) != null
-          }
-          errorMessage={
-            (embed.error as any)?.response.data.error.find((error: any) =>
-              error.path.includes("description")
-            )?.message
-          }
           placeholder={getEmbed.data?.description || "Enter a description"}
           classNames={{ inputWrapper: "!bg-modalForeground !h-[120px]" }}
         />
@@ -101,17 +82,6 @@ export default function Page({
           label="Color"
           value={color}
           onChange={(event) => setColor(event.target.value)}
-          isInvalid={
-            embed.isError &&
-            (embed.error as any)?.response.data.error.find((error: any) =>
-              error.path.includes("color")
-            ) != null
-          }
-          errorMessage={
-            (embed.error as any)?.response.data.error.find((error: any) =>
-              error.path.includes("color")
-            )?.message
-          }
           placeholder={getEmbed.data?.color || "Enter a color"}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />

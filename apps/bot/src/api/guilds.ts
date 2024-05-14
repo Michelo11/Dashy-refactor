@@ -210,5 +210,20 @@ guilds.get("/channels", authorized, async (ctx) => {
   );
 });
 
+guilds.get("/logs", authorized, async (ctx) => {
+  const id = ctx.req.param("id");
+
+  const logs = await prisma.logRecord.findMany({
+    where: {
+      guildId: id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return ctx.json(logs);
+});
+
 hono.route("/", guilds);
 export default guilds;

@@ -30,18 +30,18 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
       </p>
 
       <Table
-        classNames={{ wrapper: "bg-modal", th: "!bg-modalForeground" }}
+        classNames={{ wrapper: "bg-modal", th: "bg-modalForeground" }}
         aria-label="Logs table"
       >
-        <TableHeader>
-          <TableColumn>AUTHOR</TableColumn>
-          <TableColumn>MESSAGE</TableColumn>
-          <TableColumn>CREATED AT</TableColumn>
+        <TableHeader className="!w-full">
+          <TableColumn className="w-1/3">AUTHOR</TableColumn>
+          <TableColumn className="w-1/3">MESSAGE</TableColumn>
+          <TableColumn className="w-1/3">CREATED AT</TableColumn>
         </TableHeader>
         <TableBody>
           {getLogs.data?.length === 0 && (
             <TableRow>
-              <TableCell colSpan={3}>No logs found</TableCell>
+              <TableCell>No logs found</TableCell>
               <TableCell>
                 <p></p>
               </TableCell>
@@ -50,24 +50,26 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
               </TableCell>
             </TableRow>
           )}
+
           {getLogs.isLoading && (
             <TableRow>
               <TableCell>
-                <Skeleton className="w-1/3 h-3 rounded-lg !bg-modal"></Skeleton>
+                <Skeleton className="xl:w-1/3 w-full h-3 rounded-lg !bg-modal"></Skeleton>
               </TableCell>
               <TableCell>
-                <Skeleton className="w-1/3 h-3 rounded-lg !bg-modal"></Skeleton>
+                <Skeleton className="xl:w-1/3 w-full h-3 rounded-lg !bg-modal"></Skeleton>
               </TableCell>
               <TableCell>
-                <Skeleton className="w-1/3 h-3 rounded-lg !bg-modal"></Skeleton>
+                <Skeleton className="xl:w-1/3 w-full h-3 rounded-lg !bg-modal"></Skeleton>
               </TableCell>
             </TableRow>
           )}
+
           {getLogs.data?.map((log: any) => (
             <TableRow key={log.id}>
-              <TableCell>{log.author}</TableCell>
-              <TableCell>{log.message}</TableCell>
-              <TableCell>
+              <TableCell className="w-1/3">{log.author}</TableCell>
+              <TableCell className="w-1/3">{log.message}</TableCell>
+              <TableCell className="w-1/3">
                 {moment(log.createdAt).format("DD/mm/yyyy HH:mm")}
               </TableCell>
             </TableRow>

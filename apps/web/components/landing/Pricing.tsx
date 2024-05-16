@@ -49,12 +49,12 @@ export default function Pricing() {
             <Button
               as={Link}
               color="primary"
-              href={process.env.NEXT_PUBLIC_BOT_URL}
+              href="/dashboard"
               fullWidth
               variant="flat"
               className="text-inherit uppercase mt-3"
             >
-              Add to discord
+              Get started
             </Button>
           </CardBody>
         </Card>

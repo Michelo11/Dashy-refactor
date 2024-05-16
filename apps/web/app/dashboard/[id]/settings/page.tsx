@@ -134,7 +134,7 @@ export default function Page({
         }}
       >
         {getRoles.data?.map((role: any) => (
-          <SelectItem key={role.id} value={role.id} className="">
+          <SelectItem key={role.id} value={role.id}>
             {role.name}
           </SelectItem>
         ))}

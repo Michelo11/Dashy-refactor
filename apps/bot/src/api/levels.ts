@@ -33,7 +33,6 @@ guilds.get("/", authorized, async (ctx) => {
 });
 
 const schema = z.object({
-  level: z.number().min(0),
   role: z.string(),
   xp: z.number().min(0),
   name: z.string(),
@@ -62,7 +61,6 @@ guilds.post(
     await prisma.level.create({
       data: {
         guildId: guild.id,
-        level: body.level,
         role: body.role,
         xp: body.xp,
         name: body.name,

@@ -119,12 +119,10 @@ model LogRecord {
 
 model Level {
   id        Int      @id @default(autoincrement())
-  level     Int
   xp        Int
   name      String
   role      String?
   guildId   String
-  createdAt DateTime @default(now())
 
   guild   Guild         @relation(fields: [guildId], references: [id], onDelete: Cascade)
   members GuildMember[]

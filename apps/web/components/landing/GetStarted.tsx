@@ -3,6 +3,7 @@
 import { axiosClient } from "@/lib/fetcher";
 import { Button, Card, CardBody, Link } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
+import CountUp from "react-countup";
 
 export default function GetStarted() {
   const query = useQuery({
@@ -21,14 +22,16 @@ export default function GetStarted() {
             Ready to enhance your discord server?
           </h2>
           <p className="paragraph !text-white uppercase mt-3">
-            Join over {query.data || 0} servers owners
+            Join over <CountUp end={query.data || 0} duration={5} /> servers
+            owners
           </p>
           <Button
             as={Link}
-            href={process.env.NEXT_PUBLIC_BOT_URL}
+            color="secondary"
+            href="/dashboard"
             className="text-inherit uppercase mt-3 w-fit bg-white text-black"
           >
-            Add to discord
+            Get started
           </Button>
         </CardBody>
       </Card>

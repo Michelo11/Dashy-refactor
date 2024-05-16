@@ -10,7 +10,6 @@ describe("Manage Levels", () => {
     const res = await levels.request(base + "/new", {
       method: "POST",
       body: JSON.stringify({
-        level: 1,
         role: "1231591974830604348",
         xp: 1,
         name: "Level 1",

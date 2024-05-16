@@ -12,17 +12,8 @@ export default function Header() {
       <div className="flex gap-3">
         <Button
           as={Link}
-          color="primary"
-          href={process.env.NEXT_PUBLIC_BOT_URL}
-          className="text-inherit w-fit uppercase"
-        >
-          Add to discord
-        </Button>
-        <Button
-          as={Link}
           color="secondary"
           href="/dashboard"
-          variant="flat"
           className="text-inherit w-fit uppercase"
         >
           Get started

@@ -1,3 +1,5 @@
+"use client";
+
 import Module from "@/components/dashboard/Module";
 
 const modules = [
@@ -66,6 +68,12 @@ const modules = [
     description:
       "Create amazing giveaways to give users the chance to win something.",
     link: "giveaways",
+  },
+  {
+    title: "Webhooks",
+    description:
+      "Run specific actions based on an URL trigger you can invoke externally.",
+    link: "webhooks",
   },
   {
     title: "Socials",

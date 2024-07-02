@@ -1,8 +1,9 @@
 "use client";
 
 import { axiosClient } from "@/lib/fetcher";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody, user } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
+import CountUp from "react-countup";
 
 export default function WhyUs() {
   const guilds = useQuery({
@@ -20,7 +21,7 @@ export default function WhyUs() {
       return res.data;
     },
   });
-  
+
   const users = useQuery({
     queryKey: ["stats-users"],
     queryFn: async () => {
@@ -60,21 +61,27 @@ export default function WhyUs() {
       <div className="xl:w-1/2 w-full flex gap-3 xl:mt-0 mt-3">
         <Card className="w-1/3 h-36 bg-modal">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">{commands.data || 0}</h1>
+            <h1 className="title text-primary">
+              <CountUp end={commands.data || 0} duration={5} />
+            </h1>
             <p className="paragraph text-center">Command executed</p>
           </CardBody>
         </Card>
 
         <Card className="w-1/3 h-36 bg-modal overflow-none">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">{guilds.data || 0}</h1>
+            <h1 className="title text-primary">
+              <CountUp end={guilds.data || 0} duration={5} />
+            </h1>
             <p className="paragraph text-center">Community guilds</p>
           </CardBody>
         </Card>
 
         <Card className="w-1/3 h-36 bg-modal">
           <CardBody className="flex flex-col items-center justify-center m-auto">
-            <h1 className="title text-primary">{users.data || 0}</h1>
+            <h1 className="title text-primary">
+              <CountUp end={users.data || 0} duration={5} />
+            </h1>
             <p className="paragraph text-center">Active users</p>
           </CardBody>
         </Card>

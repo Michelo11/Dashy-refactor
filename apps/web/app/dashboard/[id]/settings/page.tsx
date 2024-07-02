@@ -4,6 +4,7 @@ import { axiosClient } from "@/lib/fetcher";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Page({
   params: { id },
@@ -17,36 +18,6 @@ export default function Page({
   const [name, setName] = useState("");
   const [prefixValue, setPrefix] = useState("");
   const [roleValue, setRole] = useState("");
-
-  const rename = useMutation({
-    mutationKey: ["rename", id],
-    mutationFn: (name: string) => {
-      return axiosClient.post(`/guilds/${id}/rename`, { name });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["name", id] });
-    },
-  });
-
-  const prefix = useMutation({
-    mutationKey: ["prefix", id],
-    mutationFn: (prefix: string) => {
-      return axiosClient.post(`/guilds/${id}/prefix`, { prefix });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["prefix", id] });
-    },
-  });
-
-  const role = useMutation({
-    mutationKey: ["role", id],
-    mutationFn: (role: string) => {
-      return axiosClient.post(`/guilds/${id}/role`, { role });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["role", id] });
-    },
-  });
 
   const getName = useQuery({
     queryKey: ["name", id],
@@ -80,6 +51,48 @@ export default function Page({
     },
   });
 
+  const rename = useMutation({
+    mutationKey: ["rename", id],
+    mutationFn: (name: string) => {
+      return axiosClient.post(`/guilds/${id}/rename`, { name });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["name", id] });
+      toast.success("Name updated!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const prefix = useMutation({
+    mutationKey: ["prefix", id],
+    mutationFn: (prefix: string) => {
+      return axiosClient.post(`/guilds/${id}/prefix`, { prefix });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["prefix", id] });
+      toast.success("Prefix updated!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const role = useMutation({
+    mutationKey: ["role", id],
+    mutationFn: (role: string) => {
+      return axiosClient.post(`/guilds/${id}/role`, { role });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["role", id] });
+      toast.success("Role updated!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   return (
     <section className="flex flex-col gap-3">
       <h1 className="title w-1/3">Settings</h1>
@@ -93,10 +106,7 @@ export default function Page({
           label="Bot Name"
           value={name}
           onChange={(event) => setName(event.target.value)}
-          isInvalid={rename.isError}
-          errorMessage={(rename.error as any)?.response.data.error}
           placeholder={getName.data}
-          description={rename.isSuccess ? "Name updated!" : undefined}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
 
@@ -105,10 +115,7 @@ export default function Page({
           label="Prefix"
           value={prefixValue}
           onChange={(event) => setPrefix(event.target.value)}
-          isInvalid={prefix.isError}
-          errorMessage={(prefix.error as any)?.response.data.error}
           placeholder={getPrefix.data}
-          description={prefix.isSuccess ? "Prefix updated!" : undefined}
           classNames={{ inputWrapper: "!bg-modalForeground" }}
         />
       </div>
@@ -121,16 +128,13 @@ export default function Page({
         }
         value={roleValue}
         onChange={(event) => setRole(event.target.value)}
-        errorMessage={(role.error as any)?.response.data.error}
-        isInvalid={role.isError}
-        description={role.isSuccess ? "Role updated!" : undefined}
         classNames={{
           trigger: "!bg-modalForeground",
           popoverContent: "!bg-modalForeground",
         }}
       >
         {getRoles.data?.map((role: any) => (
-          <SelectItem key={role.id} value={role.id} className="">
+          <SelectItem key={role.id} value={role.id}>
             {role.name}
           </SelectItem>
         ))}

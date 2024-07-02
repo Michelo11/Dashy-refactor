@@ -14,15 +14,19 @@ export default function Module({
   id: string;
 }) {
   return (
-    <Card className="w-full h-[130px] bg-modalForeground">
+    <Card className="w-full bg-modal flex flex-col">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="font-semibold leading-none text-default-600">
               {title}
             </h4>
+            <h5 className="paragraph-2 mt-3">{description}</h5>
           </div>
         </div>
+      </CardHeader>
+
+      <CardBody className="flex flex-col gap-3">
         <Button
           as={Link}
           color="primary"
@@ -31,9 +35,6 @@ export default function Module({
         >
           View
         </Button>
-      </CardHeader>
-      <CardBody className="px-3 py-0 paragraph-2">
-        <p>{description}</p>
       </CardBody>
     </Card>
   );

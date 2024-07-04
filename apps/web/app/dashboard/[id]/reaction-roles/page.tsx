@@ -1,6 +1,6 @@
 "use client";
 
-import CreateLevel from "@/components/dashboard/modal/CreateLevel";
+import CreateReactionRole from "@/components/dashboard/modal/CreateReactionRole";
 import { axiosClient } from "@/lib/fetcher";
 import {
   Button,
@@ -22,14 +22,15 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [editing] = useState<{
     name: string;
-    xp: number;
+    description: string;
     role: string;
+    emoji: string;
   } | null>(null);
 
-  const getLevels = useQuery({
-    queryKey: ["levels", id],
+  const getReactionRoles = useQuery({
+    queryKey: ["reaction-roles", id],
     queryFn: async () => {
-      const res = await axiosClient.get(`/guilds/${id}/levels`);
+      const res = await axiosClient.get(`/guilds/${id}/reaction-roles`);
       return res.data;
     },
   });
@@ -43,23 +44,23 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 
   return (
     <section className="flex flex-col gap-3">
-      <h1 className="title w-1/3">Levels</h1>
+      <h1 className="title w-1/3">Reactions Roles</h1>
       <p className="paragraph w-1/2">
-        Create levels to reward your members by chatting in your server.
+        Let your members choose roles based on a dropdown menu.
       </p>
 
       <Table
         classNames={{ wrapper: "bg-modal", th: "bg-modalForeground" }}
-        aria-label="Levels Table"
+        aria-label="Reaction Roles Table"
       >
         <TableHeader className="!w-full">
           <TableColumn className="w-1/4">NAME</TableColumn>
-          <TableColumn className="w-1/4">XP</TableColumn>
+          <TableColumn className="w-1/4">DESCRIPTION</TableColumn>
           <TableColumn className="w-1/4">ROLE</TableColumn>
-          <TableColumn className="w-1/4">ACTIONS</TableColumn>
+          <TableColumn className="w-1/4">EMOJI</TableColumn>
         </TableHeader>
         <TableBody>
-          {getLevels.data?.length === 0 && (
+          {getReactionRoles.data?.length === 0 && (
             <TableRow>
               <TableCell>No data found</TableCell>
               <TableCell>
@@ -74,7 +75,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
             </TableRow>
           )}
 
-          {getLevels.isLoading && (
+          {getReactionRoles.isLoading && (
             <TableRow>
               <TableCell>
                 <Skeleton className="xl:w-1/4 w-full h-3 rounded-lg !bg-modal"></Skeleton>
@@ -91,12 +92,16 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
             </TableRow>
           )}
 
-          {getLevels.data?.map((level: any) => (
+          {getReactionRoles.data?.map((level: any) => (
             <TableRow key={level.id}>
               <TableCell className="w-1/4">{level.name}</TableCell>
               <TableCell className="w-1/4">{level.xp}</TableCell>
               <TableCell className="whitespace-nowrap text-ellipsis overflow-hidden max-w-14">
-                {getRoles.data?.find((role: any) => role.id == level.role).name}
+                {
+                  getReactionRoles.data?.find(
+                    (role: any) => role.id == level.role
+                  ).name
+                }
               </TableCell>
               <TableCell className="w-1/4">
                 <Button
@@ -127,11 +132,11 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
         onPress={onOpen}
         className="text-inherit w-fit uppercase"
       >
-        Create New
+        Create new
       </Button>
 
-      <CreateLevel
-        level={editing}
+      <CreateReactionRole
+        reactionRole={editing}
         roles={getRoles.data || []}
         isOpen={isOpen}
         onOpenChange={onOpenChange}

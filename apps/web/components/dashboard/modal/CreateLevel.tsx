@@ -16,7 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function ManageLevel({
+export default function CreateLevel({
   level,
   roles,
   isOpen,
@@ -58,7 +58,7 @@ export default function ManageLevel({
       <ModalContent>
         <>
           <ModalHeader className="flex flex-col gap-1">
-            Manage Level
+            Create Level
           </ModalHeader>
           <ModalBody>
             <Input
@@ -66,7 +66,7 @@ export default function ManageLevel({
               label="Name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder={level?.name || "Level Name"}
+              placeholder={level?.name || "Name"}
               classNames={{ inputWrapper: "!bg-modalForeground" }}
             />
 

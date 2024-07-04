@@ -35,7 +35,7 @@ guilds.get("/", authorized, async (ctx) => {
 });
 
 const schema = z.object({
-  title: z.string(),
+  name: z.string(),
   description: z.string(),
   channelId: z.string(),
   winnerCount: z.number().min(1),
@@ -80,7 +80,7 @@ guilds.post(
     let giveaway = await prisma.giveaway.create({
       data: {
         guildId: id,
-        title: body.title,
+        title: body.name,
         description: body.description,
         channelId: body.channelId,
         winnerCount: body.winnerCount,

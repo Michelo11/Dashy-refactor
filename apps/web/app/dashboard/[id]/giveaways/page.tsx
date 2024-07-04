@@ -1,6 +1,6 @@
 "use client";
 
-import CreateLevel from "@/components/dashboard/modal/CreateLevel";
+import CreateGiveaway from "@/components/dashboard/modal/CreateGiveaway";
 import { axiosClient } from "@/lib/fetcher";
 import {
   Button,
@@ -22,30 +22,32 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [editing] = useState<{
     name: string;
-    xp: number;
-    role: string;
+    description: string;
+    winnerCount: number;
+    channelId: string;
+    endsAt: number;
   } | null>(null);
 
-  const getLevels = useQuery({
-    queryKey: ["levels", id],
+  const getGiveaways = useQuery({
+    queryKey: ["giveaways", id],
     queryFn: async () => {
-      const res = await axiosClient.get(`/guilds/${id}/levels`);
+      const res = await axiosClient.get(`/guilds/${id}/giveaways`);
       return res.data;
     },
   });
-  const getRoles = useQuery({
-    queryKey: ["roles", id],
+  const getChannels = useQuery({
+    queryKey: ["channels", id],
     queryFn: async () => {
-      const res = await axiosClient.get(`/guilds/${id}/roles`);
+      const res = await axiosClient.get(`/guilds/${id}/channels`);
       return res.data;
     },
   });
 
   return (
     <section className="flex flex-col gap-3">
-      <h1 className="title w-1/3">Levels</h1>
+      <h1 className="title w-1/3">Giveaways</h1>
       <p className="paragraph w-1/2">
-        Create levels to reward your members by chatting in your server.
+        Create amazing giveaways to give users the chance to win something.
       </p>
 
       <Table
@@ -59,7 +61,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
           <TableColumn className="w-1/4">ACTIONS</TableColumn>
         </TableHeader>
         <TableBody>
-          {getLevels.data?.length === 0 && (
+          {getGiveaways.data?.length === 0 && (
             <TableRow>
               <TableCell>No data found</TableCell>
               <TableCell>
@@ -74,7 +76,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
             </TableRow>
           )}
 
-          {getLevels.isLoading && (
+          {getGiveaways.isLoading && (
             <TableRow>
               <TableCell>
                 <Skeleton className="xl:w-1/4 w-full h-3 rounded-lg !bg-modal"></Skeleton>
@@ -91,12 +93,15 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
             </TableRow>
           )}
 
-          {getLevels.data?.map((level: any) => (
+          {getGiveaways.data?.map((level: any) => (
             <TableRow key={level.id}>
               <TableCell className="w-1/4">{level.name}</TableCell>
               <TableCell className="w-1/4">{level.xp}</TableCell>
               <TableCell className="whitespace-nowrap text-ellipsis overflow-hidden max-w-14">
-                {getRoles.data?.find((role: any) => role.id == level.role).name}
+                {
+                  getGiveaways.data?.find((role: any) => role.id == level.role)
+                    .name
+                }
               </TableCell>
               <TableCell className="w-1/4">
                 <Button
@@ -130,9 +135,9 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
         Create New
       </Button>
 
-      <CreateLevel
-        level={editing}
-        roles={getRoles.data || []}
+      <CreateGiveaway
+        giveaway={editing}
+        channels={getChannels.data || []}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         guildId={id}

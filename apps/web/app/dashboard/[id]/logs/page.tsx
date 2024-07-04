@@ -31,7 +31,7 @@ export default function Page({ params: { id } }: { params: { id: string } }) {
 
       <Table
         classNames={{ wrapper: "bg-modal", th: "bg-modalForeground" }}
-        aria-label="Logs table"
+        aria-label="Logs Table"
       >
         <TableHeader className="!w-full">
           <TableColumn className="w-1/3">AUTHOR</TableColumn>

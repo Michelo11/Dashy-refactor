@@ -26,7 +26,6 @@ export default function Page({
       return res.data;
     },
   });
-
   const getPrefix = useQuery({
     queryKey: ["prefix", id],
     queryFn: async () => {
@@ -34,7 +33,6 @@ export default function Page({
       return res.data;
     },
   });
-
   const getRoles = useQuery({
     queryKey: ["roles", id],
     queryFn: async () => {
@@ -42,7 +40,6 @@ export default function Page({
       return res.data;
     },
   });
-
   const getRole = useQuery({
     queryKey: ["role", id],
     queryFn: async () => {
@@ -64,7 +61,6 @@ export default function Page({
       toast.error(error.message);
     },
   });
-
   const prefix = useMutation({
     mutationKey: ["prefix", id],
     mutationFn: (prefix: string) => {
@@ -78,7 +74,6 @@ export default function Page({
       toast.error(error.message);
     },
   });
-
   const role = useMutation({
     mutationKey: ["role", id],
     mutationFn: (role: string) => {

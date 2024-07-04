@@ -34,7 +34,7 @@ const schema = z.object({
       description: z.string().optional(),
     })
   ),
-  title: z.string(),
+  name: z.string(),
   description: z.string(),
   channelId: z.string(),
 });
@@ -66,7 +66,7 @@ guilds.post(
             data: data.roles,
           },
         },
-        title: data.title,
+        title: data.name,
         description: data.description,
       },
     });
@@ -82,7 +82,7 @@ guilds.post(
     }
 
     const embed = new EmbedBuilder()
-      .setTitle(data.title)
+      .setTitle(data.name)
       .setDescription(data.description);
 
     const menu = new StringSelectMenuBuilder()

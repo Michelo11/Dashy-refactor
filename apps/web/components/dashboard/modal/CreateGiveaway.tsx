@@ -38,6 +38,7 @@ export default function CreateGiveaway({
   onOpenChange: () => void;
   guildId: string;
 }) {
+  // TODO: Fix the mutation
   const queryClient = useQueryClient();
 
   const [name, setName] = useState("");
@@ -49,9 +50,7 @@ export default function CreateGiveaway({
   const createGiveaway = useMutation({
     mutationKey: ["giveaway", guildId],
     mutationFn: (giveaway: any) => {
-      return axiosClient.post(`/guilds/${guildId}/giveaways/new`, {
-        giveaways: [giveaway],
-      });
+      return axiosClient.post(`/guilds/${guildId}/giveaways/new`, giveaway);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["giveaways", guildId] });
@@ -135,7 +134,7 @@ export default function CreateGiveaway({
                   description,
                   winnerCount: parseInt(winnerCount),
                   channelId: channelValue,
-                  endsAt,
+                  endsAt: endsAt?.toDate("Europe/Rome").getDate(),
                 });
 
                 onOpenChange();

@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Link,
-  Skeleton
+  Skeleton,
 } from "@nextui-org/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -31,7 +31,7 @@ export default function Navbar() {
   return (
     <nav className="w-full py-3 ">
       <div className="flex justify-between border-1 border-gray-800 p-4 rounded-lg">
-        <div className="flex gap-3 items-center">
+        <a className="flex gap-3 items-center !text-white" href="/">
           <Image
             src="/logo.png"
             alt="Navbar Logo"
@@ -41,7 +41,7 @@ export default function Navbar() {
             priority
           />
           <p className="font-bold text-inherit uppercase text-lg">Dashy</p>
-        </div>
+        </a>
 
         <ul className="gap-6 items-center hidden xl:flex">
           <li>
